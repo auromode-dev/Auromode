@@ -1,0 +1,86 @@
+﻿export const localized = {
+  fr: {
+    language: "Français",
+    welcome: "Un peu plus près de la nature. Un peu plus près de vous.",
+    nav: [
+      "Notre histoire",
+      "Séjourner",
+      "La vie au campus",
+      "Découvrir Auroville",
+      "Contact",
+    ],
+    book: "Préparer votre séjour",
+    tag: "AU CŒUR D’AUROVILLE",
+    title: "Un lieu où séjourner. Un espace pour être soi.",
+    subtitle:
+      "Séjourner, travailler, partager un repas et se rencontrer. Découvrez le rythme d’Auromode.",
+    storyTitle: "Venez pour un séjour. Trouvez votre place.",
+    story:
+      "Créé en 1975 comme atelier de confection, Auromode est devenu une maison d’hôtes en 2014. Aujourd’hui, hébergement, coworking, restauration et rencontres se retrouvent sur un même campus au cœur d’Auroville.",
+    stayTitle: "Un espace pour se reposer.",
+    stayText:
+      "Chambre Standard, chambre Deluxe, chambre Familiale ou long séjour : contactez la réception pour connaître les disponibilités, les équipements et les tarifs actuels.",
+    workTitle: "Travailler, partager, découvrir.",
+    work: "Hive Coworking propose des espaces de travail flexibles, des zones privées, des salles de réunion et une connexion Internet haut débit. Contactez-nous pour les formules et disponibilités.",
+    eat: "Au Tanto Restaurant, prenez le temps de partager un repas. Demandez à la réception le menu actuel, les horaires et les options alimentaires.",
+    shop: "Découvrez les collections de la boutique To Be Two, sur le campus. Contactez-nous pour les produits disponibles et les horaires.",
+    exploreTitle: "Prenez le temps de découvrir Auroville.",
+    explore:
+      "Promenez-vous dans les chemins verdoyants, rencontrez des créateurs et découvrez les environs du Matrimandir. Consultez les modalités de visite officielles et demandez conseil à la réception.",
+    contactTitle: "Tout commence par un bonjour.",
+    hours: "Réception : du lundi au samedi, de 9 h 30 à 17 h.",
+    email: "Écrivez-nous",
+    whatsapp: "Discuter sur WhatsApp",
+    directions: "Itinéraire",
+    bookingNote:
+      "Le formulaire de réservation en ligne est actuellement en anglais. Vous pouvez nous écrire en français pour préparer votre séjour.",
+    online: "Ouvrir la réservation en anglais",
+    footer: "Un lieu où séjourner. Un espace pour être soi.",
+    links: "DÉCOUVRIR",
+    connect: "CONTACT",
+    find: "NOUS TROUVER",
+    copyright: "Pour un quotidien plus conscient.",
+  },
+  ta: {
+    language: "தமிழ்",
+    welcome: "இயற்கைக்கு இன்னும் அருகில். உங்களுக்குள் இன்னும் நெருக்கமாக.",
+    nav: [
+      "எங்கள் கதை",
+      "தங்குமிடம்",
+      "வளாக வாழ்க்கை",
+      "ஆரோவில்லைக் காணுங்கள்",
+      "தொடர்பு",
+    ],
+    book: "தங்கத் திட்டமிடுங்கள்",
+    tag: "ஆரோவில்லின் இதயத்தில்",
+    title: "தங்க ஓர் இடம். நீங்களாக இருக்க ஓர் வெளி.",
+    subtitle:
+      "தங்குங்கள், பணியாற்றுங்கள், உணவைப் பகிருங்கள், புதிய உறவுகளை உருவாக்குங்கள். ஆரோமோடின் அமைதியான வாழ்க்கையை அனுபவியுங்கள்.",
+    storyTitle: "தங்க வாருங்கள். உங்களுக்கான இடத்தைக் கண்டறியுங்கள்.",
+    story:
+      "1975-இல் ஆடைத் தொழிற்சாலையாகத் தொடங்கிய ஆரோமோடு, 2014-இல் விருந்தினர் இல்லமாக மாறியது. இன்று தங்குமிடம், பணியிடம், உணவகம் மற்றும் சமூகச் சந்திப்புகள் ஒரே வளாகத்தில் இணைகின்றன.",
+    stayTitle: "ஓய்வெடுக்க உங்களுக்கான ஓர் இடம்.",
+    stayText:
+      "ஸ்டாண்டர்டு அறை, டீலக்ஸ் அறை, குடும்ப அறை அல்லது நீண்டகாலத் தங்குமிடம் — அறை கிடைப்பது, வசதிகள் மற்றும் தற்போதைய கட்டணங்களை அறிய வரவேற்பகத்தைத் தொடர்புகொள்ளுங்கள்.",
+    workTitle: "பணியாற்றுங்கள். பகிருங்கள். கண்டறியுங்கள்.",
+    work: "ஹைவ் கோவொர்க்கிங்: நெகிழ்வான பணியிடங்கள், தனிப்பட்ட பணிப் பகுதிகள், கூட்ட அறைகள் மற்றும் அதிவேக இணையம். உறுப்பினர் திட்டங்கள் மற்றும் இட வசதிகள் குறித்து விசாரிக்கவும்.",
+    eat: "டான்டோ உணவகத்தில் நிதானமாக உணவைப் பகிர்ந்து மகிழுங்கள். தற்போதைய உணவுப் பட்டியல், திறந்திருக்கும் நேரம் மற்றும் உணவுத் தேவைகள் குறித்து வரவேற்பகத்தில் விசாரிக்கவும்.",
+    shop: "வளாகத்தில் உள்ள டு பீ டூ கடையின் தொகுப்புகளைக் கண்டறியுங்கள். கிடைக்கும் பொருட்கள் மற்றும் திறந்திருக்கும் நேரத்திற்குத் தொடர்புகொள்ளுங்கள்.",
+    exploreTitle: "ஆரோவில்லைக் கண்டறிய நேரம் ஒதுக்குங்கள்.",
+    explore:
+      "பசுமையான பாதைகளில் நடந்து, கலைஞர்களைச் சந்தித்து, மாத்ரிமந்திரின் சுற்றுப்புறங்களைக் கண்டறியுங்கள். அதிகாரப்பூர்வ பார்வையாளர் வழிமுறைகளைச் சரிபார்த்து, வரவேற்பகத்தில் ஆலோசனை பெறுங்கள்.",
+    contactTitle: "ஒரு வணக்கத்துடன் தொடங்குவோம்.",
+    hours: "வரவேற்பகம்: திங்கள் முதல் சனி வரை, காலை 9:30 முதல் மாலை 5:00 வரை.",
+    email: "மின்னஞ்சல் அனுப்புங்கள்",
+    whatsapp: "வாட்ஸ்அப்பில் பேசுங்கள்",
+    directions: "வழித்தடம்",
+    bookingNote:
+      "இணைய முன்பதிவுப் படிவம் தற்போது ஆங்கிலத்தில் உள்ளது. தங்குமிடத்தைத் திட்டமிட எங்களுக்குத் தமிழில் எழுதலாம்.",
+    online: "ஆங்கில முன்பதிவைத் திறக்கவும்",
+    footer: "தங்க ஓர் இடம். நீங்களாக இருக்க ஓர் வெளி.",
+    links: "கண்டறியுங்கள்",
+    connect: "தொடர்பு",
+    find: "எங்கள் முகவரி",
+    copyright: "விழிப்புணர்வுடன் வாழ்வதற்காக.",
+  },
+};

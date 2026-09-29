@@ -1,12 +1,16 @@
-﻿"use client";
-import { useState } from "react";
+"use client";
+import Image from "next/image";
+import { normalizeRoomCategory } from "@/lib/rooms";
+
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowUpRight, Check, ShieldCheck } from "lucide-react";
 import { roomTypes } from "@/lib/content";
 import { staySchema, nights } from "@/lib/validation";
 type Availability = {
-  mode: "live" | "enquiry";
-  rooms?: {
+  mode: "live";
+  checkoutEnabled: boolean;
+  rooms: {
     id: string;
     nightly_rate: number;
     cancellation_terms: string;
@@ -26,27 +30,34 @@ declare global {
 export function BookingForm() {
   const query = useSearchParams();
   const [stay, setStay] = useState({
-    room: query.get("room") || "standard",
+    room: normalizeRoomCategory(
+      query.get("room"),
+      Number(query.get("adults") || 2),
+    ),
     checkin: query.get("checkin") || "",
     checkout: query.get("checkout") || "",
-    adults: query.get("adults") || "2",
+    adults: query.get("adults") || (query.get("room") === "studio" ? "1" : "2"),
     children: "0",
   });
   const [availability, setAvailability] = useState<Availability | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [done, setDone] = useState(false);
-  const [emailLink, setEmailLink] = useState("");
+  const requestVersion = useRef(0);
+  const initialSearch = useRef(false);
   const room = roomTypes.find((r) => r.id === stay.room) || roomTypes[0];
   const length =
     stay.checkin && stay.checkout ? nights(stay.checkin, stay.checkout) : 0;
   const update = (key: string, value: string) => {
+    requestVersion.current++;
+    setBusy(false);
     setStay((s) => ({ ...s, [key]: value }));
     setAvailability(null);
     setMessage("");
-    setEmailLink("");
   };
   async function check() {
+    const version = ++requestVersion.current;
+    setAvailability(null);
     setMessage("");
     const valid = staySchema.safeParse(stay);
     if (!valid.success) {
@@ -61,20 +72,32 @@ export function BookingForm() {
         body: JSON.stringify(stay),
       });
       const data = await r.json();
-      if (!r.ok) throw new Error(data.error);
+      if (version !== requestVersion.current) return;
+      if (!r.ok)
+        throw new Error(
+          data.error || "We could not check availability. Please try again.",
+        );
       setAvailability(data);
       if (data.mode === "live" && !data.rooms?.length)
         setMessage(
-          "No rooms are available for this selection. Try different dates or contact reception.",
+          "No rooms available for these dates and guests. Try different dates or a different room type.",
         );
     } catch (e) {
+      if (version !== requestVersion.current) return;
+      setAvailability(null);
       setMessage(
         e instanceof Error ? e.message : "Could not check availability.",
       );
     } finally {
-      setBusy(false);
+      if (version === requestVersion.current) setBusy(false);
     }
   }
+  useEffect(() => {
+    if (!initialSearch.current) {
+      initialSearch.current = true;
+      if (stay.checkin && stay.checkout) void check();
+    }
+  }, []);
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setMessage("");
@@ -88,19 +111,7 @@ export function BookingForm() {
         ? availability.rooms[0].nightly_rate * length
         : undefined,
     };
-    if (availability?.mode === "enquiry") {
-      const body = `Stay enquiry\n\n${data.firstName} ${data.lastName}\n${data.email}\n${data.phone}\nRoom: ${room.name}\nCheck-in: ${stay.checkin}\nCheck-out: ${stay.checkout}\nAdults: ${stay.adults}; children: ${stay.children}\nRequests: ${data.requests || "None"}\n\nPlease confirm availability, the full rate, and cancellation terms.`;
-      setEmailLink(
-        "mailto:avapart@gmail.com?subject=" +
-          encodeURIComponent("Stay enquiry — " + stay.checkin) +
-          "&body=" +
-          encodeURIComponent(body),
-      );
-      setMessage(
-        "Your enquiry is ready. Open your email app below and send it to reception. Your room is not reserved yet.",
-      );
-      return;
-    }
+    if (!availability?.rooms.length || !availability.checkoutEnabled) return;
     setBusy(true);
     try {
       if (!window.Razorpay)
@@ -185,10 +196,22 @@ export function BookingForm() {
   return (
     <>
       <div className="booking-steps">
-        <span className={!availability ? "current" : ""}>
+        <span
+          className={
+            !availability?.rooms.length || !availability?.checkoutEnabled
+              ? "current"
+              : ""
+          }
+        >
           <b>1</b>Your stay
         </span>
-        <span className={availability && !done ? "current" : ""}>
+        <span
+          className={
+            availability?.rooms.length && availability.checkoutEnabled && !done
+              ? "current"
+              : ""
+          }
+        >
           <b>2</b>Your details
         </span>
         <span className={done ? "current" : ""}>
@@ -264,128 +287,148 @@ export function BookingForm() {
                 {busy ? "Just a moment…" : "Check availability"}
                 <ArrowUpRight size={16} />
               </button>
-              {availability &&
-                (availability.mode === "enquiry" ||
-                  !!availability.rooms?.length) && (
-                  <form onSubmit={submit} style={{ marginTop: 35 }}>
-                    <div className="notice">
-                      {availability.mode === "enquiry"
-                        ? "Let’s plan your stay together. Reception will confirm availability, rates, and booking terms by email."
-                        : `A room is available. Total: ₹${((availability.rooms![0].nightly_rate * length) / 100).toLocaleString("en-IN")}, including applicable taxes.`}
-                    </div>
-                    {availability.mode === "live" && (
-                      <p className="notice">
-                        <strong>Cancellation terms</strong>
-                        <br />
-                        {availability.rooms?.[0]?.cancellation_terms}
-                      </p>
-                    )}
-                    <h2>Your details</h2>
-                    <div className="field-grid">
+              {availability && !!availability.rooms.length && (
+                <form onSubmit={submit} style={{ marginTop: 35 }}>
+                  <div className="notice" role="status">
+                    <strong>
+                      {availability.rooms.length === 1
+                        ? "1 room available"
+                        : availability.rooms.length + " rooms available"}{" "}
+                      for your dates.
+                    </strong>
+                    <p>
+                      From ₹
+                      {(
+                        availability.rooms[0].nightly_rate / 100
+                      ).toLocaleString("en-IN")}{" "}
+                      per night · ₹
+                      {(
+                        (availability.rooms[0].nightly_rate * length) /
+                        100
+                      ).toLocaleString("en-IN")}{" "}
+                      total for {length} night{length === 1 ? "" : "s"},
+                      including taxes.
+                    </p>
+                    <p>
+                      Availability is checked live. Your room is reserved only
+                      after booking confirmation.
+                    </p>
+                  </div>
+                  <p className="notice">
+                    <strong>Cancellation terms</strong>
+                    <br />
+                    {availability.rooms[0].cancellation_terms}
+                  </p>
+                  {!availability.checkoutEnabled && (
+                    <p className="notice">
+                      Online payment is currently unavailable. Availability and
+                      prices above are live; no reservation has been made.
+                    </p>
+                  )}
+                  {availability.checkoutEnabled && (
+                    <>
+                      <h2>Your details</h2>
+                      <div className="field-grid">
+                        <label className="field">
+                          First name
+                          <input
+                            name="firstName"
+                            required
+                            maxLength={80}
+                            autoComplete="given-name"
+                          />
+                        </label>
+                        <label className="field">
+                          Last name
+                          <input
+                            name="lastName"
+                            required
+                            maxLength={80}
+                            autoComplete="family-name"
+                          />
+                        </label>
+                        <label className="field">
+                          Email
+                          <input
+                            name="email"
+                            type="email"
+                            required
+                            maxLength={254}
+                            autoComplete="email"
+                          />
+                        </label>
+                        <label className="field">
+                          Phone
+                          <input
+                            name="phone"
+                            type="tel"
+                            required
+                            minLength={7}
+                            maxLength={30}
+                            autoComplete="tel"
+                          />
+                        </label>
+                      </div>
                       <label className="field">
-                        First name
-                        <input
-                          name="firstName"
-                          required
-                          maxLength={80}
-                          autoComplete="given-name"
+                        Anything we should know?
+                        <textarea
+                          name="requests"
+                          placeholder="Arrival time, accessibility needs, or special requests…"
+                          maxLength={2000}
                         />
                       </label>
-                      <label className="field">
-                        Last name
+                      <label
+                        style={{
+                          fontSize: 11,
+                          display: "flex",
+                          gap: 10,
+                          alignItems: "flex-start",
+                          marginBottom: 20,
+                        }}
+                      >
                         <input
-                          name="lastName"
+                          type="checkbox"
                           required
-                          maxLength={80}
-                          autoComplete="family-name"
+                          style={{ marginTop: 5 }}
                         />
+                        <span>
+                          I agree to share my details with Auromode to arrange
+                          my stay.
+                          {
+                            " I have reviewed the cancellation terms shown above."
+                          }
+                        </span>
                       </label>
-                      <label className="field">
-                        Email
-                        <input
-                          name="email"
-                          type="email"
-                          required
-                          maxLength={254}
-                          autoComplete="email"
-                        />
+                      <label
+                        style={{
+                          display: "flex",
+                          gap: 10,
+                          fontSize: 11,
+                          marginBottom: 20,
+                        }}
+                      >
+                        <input type="checkbox" name="whatsappOptIn" />
+                        Send me booking updates on WhatsApp (optional).
                       </label>
-                      <label className="field">
-                        Phone
-                        <input
-                          name="phone"
-                          type="tel"
-                          required
-                          minLength={7}
-                          maxLength={30}
-                          autoComplete="tel"
-                        />
-                      </label>
-                    </div>
-                    <label className="field">
-                      Anything we should know?
-                      <textarea
-                        name="requests"
-                        placeholder="Arrival time, accessibility needs, or special requests…"
-                        maxLength={2000}
-                      />
-                    </label>
-                    <label
-                      style={{
-                        fontSize: 11,
-                        display: "flex",
-                        gap: 10,
-                        alignItems: "flex-start",
-                        marginBottom: 20,
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        required
-                        style={{ marginTop: 5 }}
-                      />
-                      <span>
-                        I agree to share my details with Auromode to arrange my
-                        stay.
-                        {availability.mode === "live" &&
-                          " I have reviewed the cancellation terms provided by reception."}
-                      </span>
-                    </label>
-                    <label
-                      style={{
-                        display: "flex",
-                        gap: 10,
-                        fontSize: 11,
-                        marginBottom: 20,
-                      }}
-                    >
-                      <input type="checkbox" name="whatsappOptIn" />
-                      Send me booking updates on WhatsApp (optional).
-                    </label>
-                    <button className="button" disabled={busy}>
-                      {availability.mode === "enquiry"
-                        ? "Prepare email enquiry"
-                        : "Continue to secure payment"}
-                      <ArrowUpRight size={16} />
-                    </button>
-                  </form>
-                )}
+                      <button className="button" disabled={busy}>
+                        Continue to secure payment
+                        <ArrowUpRight size={16} />
+                      </button>
+                    </>
+                  )}
+                </form>
+              )}
             </>
           )}
           {message && (
             <div className="notice" role="status">
               {done && <Check size={20} />}
               <p>{message}</p>
-              {emailLink && (
-                <a className="text-link" href={emailLink}>
-                  Open email and send enquiry <ArrowUpRight size={16} />
-                </a>
-              )}
             </div>
           )}
         </div>
         <aside className="booking-aside">
-          <img src={room.image} alt={`${room.name} inspiration`} />
+          <Image width={900} height={600} src={room.image} alt={room.name} />
           <div>
             <span className="eyebrow">YOUR AUROMODE STAY</span>
             <h3>{room.name}</h3>

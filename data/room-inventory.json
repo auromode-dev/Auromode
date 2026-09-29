@@ -1,0 +1,376 @@
+[
+  {
+    "room_number": 1,
+    "name": "Room 01",
+    "category": "triple",
+    "capacity": 3,
+    "season_rate": 400000,
+    "non_season_rate": 350000,
+    "image_urls": [
+      "/images/triple.jpg"
+    ]
+  },
+  {
+    "room_number": 2,
+    "name": "Room 02",
+    "category": "family",
+    "capacity": 4,
+    "season_rate": 450000,
+    "non_season_rate": 400000,
+    "image_urls": [
+      "/images/family-suite.jpg"
+    ]
+  },
+  {
+    "room_number": 3,
+    "name": "Room 03",
+    "category": "triple",
+    "capacity": 3,
+    "season_rate": 400000,
+    "non_season_rate": 350000,
+    "image_urls": [
+      "/images/triple.jpg"
+    ]
+  },
+  {
+    "room_number": 4,
+    "name": "Room 04",
+    "category": "triple",
+    "capacity": 3,
+    "season_rate": 400000,
+    "non_season_rate": 350000,
+    "image_urls": [
+      "/images/triple.jpg"
+    ]
+  },
+  {
+    "room_number": 5,
+    "name": "Room 05",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 400000,
+    "non_season_rate": 350000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 6,
+    "name": "Room 06",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 500000,
+    "non_season_rate": 400000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 7,
+    "name": "Room 07",
+    "category": "family",
+    "capacity": 4,
+    "season_rate": 450000,
+    "non_season_rate": 400000,
+    "image_urls": [
+      "/images/family-suite.jpg"
+    ]
+  },
+  {
+    "room_number": 8,
+    "name": "Room 08",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 400000,
+    "non_season_rate": 350000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 9,
+    "name": "Room 09",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 400000,
+    "non_season_rate": 350000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 10,
+    "name": "Room 10",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 400000,
+    "non_season_rate": 350000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 11,
+    "name": "Room 11",
+    "category": "triple",
+    "capacity": 3,
+    "season_rate": 450000,
+    "non_season_rate": 350000,
+    "image_urls": [
+      "/images/triple.jpg"
+    ]
+  },
+  {
+    "room_number": 12,
+    "name": "Room 12",
+    "category": "triple",
+    "capacity": 3,
+    "season_rate": 400000,
+    "non_season_rate": 350000,
+    "image_urls": [
+      "/images/triple.jpg"
+    ]
+  },
+  {
+    "room_number": 13,
+    "name": "Room 13",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 300000,
+    "non_season_rate": 250000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 14,
+    "name": "Room 14",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 400000,
+    "non_season_rate": 300000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 15,
+    "name": "Room 15",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 450000,
+    "non_season_rate": 300000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 16,
+    "name": "Room 16",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 380000,
+    "non_season_rate": 280000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 17,
+    "name": "Room 17",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 380000,
+    "non_season_rate": 280000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 18,
+    "name": "Room 18",
+    "category": "family",
+    "capacity": 4,
+    "season_rate": 500000,
+    "non_season_rate": 400000,
+    "image_urls": [
+      "/images/family-suite.jpg"
+    ]
+  },
+  {
+    "room_number": 19,
+    "name": "Room 19",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 400000,
+    "non_season_rate": 250000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 20,
+    "name": "Room 20",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 250000,
+    "non_season_rate": 200000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 21,
+    "name": "Room 21",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 400000,
+    "non_season_rate": 250000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 22,
+    "name": "Room 22",
+    "category": "studio",
+    "capacity": 1,
+    "season_rate": 200000,
+    "non_season_rate": 150000,
+    "image_urls": [
+      "/images/studio.jpg"
+    ]
+  },
+  {
+    "room_number": 23,
+    "name": "Room 23",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 250000,
+    "non_season_rate": 200000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 24,
+    "name": "Room 24",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 250000,
+    "non_season_rate": 200000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 25,
+    "name": "Room 25",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 400000,
+    "non_season_rate": 300000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 26,
+    "name": "Room 26",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 400000,
+    "non_season_rate": 250000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 27,
+    "name": "Room 27",
+    "category": "family",
+    "capacity": 4,
+    "season_rate": 600000,
+    "non_season_rate": 450000,
+    "image_urls": [
+      "/images/family-suite.jpg"
+    ]
+  },
+  {
+    "room_number": 28,
+    "name": "Room 28",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 350000,
+    "non_season_rate": 200000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 29,
+    "name": "Room 29",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 350000,
+    "non_season_rate": 200000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 30,
+    "name": "Room 30",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 350000,
+    "non_season_rate": 200000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 31,
+    "name": "Room 31",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 350000,
+    "non_season_rate": 200000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 32,
+    "name": "Room 32",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 350000,
+    "non_season_rate": 200000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 33,
+    "name": "Room 33",
+    "category": "twin",
+    "capacity": 2,
+    "season_rate": 350000,
+    "non_season_rate": 200000,
+    "image_urls": [
+      "/images/twin.jpg"
+    ]
+  },
+  {
+    "room_number": 34,
+    "name": "Room 34",
+    "category": "studio",
+    "capacity": 1,
+    "season_rate": 200000,
+    "non_season_rate": 150000,
+    "image_urls": [
+      "/images/studio.jpg"
+    ]
+  }
+]

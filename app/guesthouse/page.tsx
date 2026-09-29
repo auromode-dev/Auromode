@@ -1,3 +1,5 @@
+import { RoomGallery } from "@/components/room-gallery";
+import { roomImages } from "@/lib/rooms";
 import { database } from "@/lib/server";
 import Link from "next/link";
 import { Users, Wifi, ArrowUpRight } from "lucide-react";
@@ -15,7 +17,7 @@ export default async function Guesthouse() {
     ? (
         await db
           .from("rooms")
-          .select("category,nightly_rate,image_url")
+          .select("category,nightly_rate,image_url,image_urls")
           .eq("active", true)
           .order("nightly_rate")
       ).data
@@ -49,18 +51,21 @@ export default async function Guesthouse() {
         <div className="room-grid">
           {roomTypes.map((room) => (
             <article className="room-card" key={room.id}>
-              <img
-                src={
-                  inventory?.find((r) => r.category === room.id && r.image_url)
-                    ?.image_url || room.image
-                }
-                alt={`${room.name} inspiration`}
-                loading="lazy"
+              <RoomGallery
+                name={room.name}
+                images={[
+                  ...new Set(
+                    (inventory?.filter((r) => r.category === room.id) || [])
+                      .flatMap((r) => roomImages(r, room.image))
+                      .concat(room.image),
+                  ),
+                ].slice(0, 12)}
               />
               <div className="room-body">
                 <div className="room-meta">
                   <span>
-                    <Users size={14} /> Up to {room.capacity} guests
+                    <Users size={14} /> {room.beds} bed
+                    {room.beds === 1 ? "" : "s"}
                   </span>
                   <span>
                     <Wifi size={14} /> WiFi
@@ -100,8 +105,8 @@ export default async function Guesthouse() {
           ))}
         </div>
         <p className="form-note">
-          Room imagery is illustrative. Confirm your room’s amenities and
-          current rates with reception before booking.
+          Photos show the room categories. Rates are per room, per night,
+          including taxes. Check your dates for live availability.
         </p>
       </section>
       <section className="faq">
@@ -114,7 +119,7 @@ export default async function Guesthouse() {
         {[
           [
             "How do I book a room?",
-            "Choose your dates and room type in our booking form. Reception can confirm availability and rates. When online booking is enabled, you can reserve and pay securely.",
+            "Choose your dates and room type to see live availability and rates immediately. When online payment is enabled, enter your details and pay securely to confirm your booking.",
           ],
           [
             "Can I stay for a longer period?",

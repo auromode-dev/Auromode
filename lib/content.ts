@@ -1,7 +1,7 @@
 export const photos = {
   hero: "/images/hero.jpg",
   garden: "/images/garden.jpg",
-  room: "/images/room.jpg",
+  room: "/images/twin.jpg",
   work: "/images/work.jpg",
   food: "/images/food.jpg",
   store: "/images/store.jpg",
@@ -49,35 +49,37 @@ export const experiences = [
 ];
 export const roomTypes = [
   {
-    id: "standard",
-    name: "Standard Room",
-    capacity: 2,
-    image: photos.standard,
+    id: "studio",
+    name: "Studio Suite",
+    capacity: 1,
+    beds: 1,
+    image: "/images/studio.jpg",
     description:
-      "An easy, restful retreat with natural light and everything you need to settle in.",
+      "A comfortable one-bed suite for a quiet stay at your own pace.",
   },
   {
-    id: "deluxe",
-    name: "Deluxe Room",
+    id: "twin",
+    name: "Twin Room",
     capacity: 2,
-    image: photos.room,
-    description:
-      "A little more room to unwind, with thoughtful details and a comfortable workspace.",
+    beds: 2,
+    image: "/images/twin.jpg",
+    description: "Two beds and a welcoming space to settle in together.",
+  },
+  {
+    id: "triple",
+    name: "Triple Room",
+    capacity: 3,
+    beds: 3,
+    image: "/images/triple.jpg",
+    description: "Three beds with room for friends or family to feel at home.",
   },
   {
     id: "family",
-    name: "Family Room",
+    name: "Family Suite",
     capacity: 4,
-    image: photos.family,
+    beds: 4,
+    image: "/images/family-suite.jpg",
     description:
-      "Room for your favourite people, shared moments, and a slower kind of holiday.",
-  },
-  {
-    id: "long-stay",
-    name: "Long Stay",
-    capacity: 2,
-    image: photos.garden,
-    description:
-      "Make yourself at home in Auroville. Ask us about extended stays and tailored rates.",
+      "A four-bed suite for shared moments and a slower kind of holiday.",
   },
 ];

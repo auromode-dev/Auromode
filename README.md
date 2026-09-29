@@ -1,6 +1,6 @@
 ﻿# Auromode Auroville
 
-Next.js 15, TypeScript, Tailwind CSS 4, Framer Motion, Supabase/PostgreSQL, and Razorpay. A responsive hospitality website with local photography and fonts, an enquiry-first preview, and integration code for live reservations.
+Next.js 15, TypeScript, Tailwind CSS 4, Framer Motion, Supabase/PostgreSQL, and Razorpay. A responsive hospitality website with local photography and fonts, live room availability, and integration code for live reservations.
 
 ## Run locally
 
@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000. No credentials are needed to browse the site. Without live services, the booking flow prepares an email enquiry; it never claims a room has been reserved or a payment taken.
+Open http://localhost:3000. No credentials are needed to browse the site. Availability checks require Supabase and run independently of Razorpay or Resend. The site displays available rooms and rates, or no availability, directly from the database. Connection problems show an error rather than an email fallback. Checkout is offered only when Razorpay is configured.
 
 ```sh
 npm run typecheck
@@ -36,13 +36,13 @@ npm start
 
 ## Connect Supabase
 
-1. Copy `.env.example` to `.env.local`. Set the project URL, anon key, and server-only service role key.
+1. Copy `.env.example` to `.env.local`. Set the project URL (`https://YOUR_PROJECT_REF.supabase.co`), anon key, and server-only service role key. Next.js does not load `.env.example`. Keep real credentials in the ignored `.env.local` file and restart the development server after changing them.
 2. Run `supabase/schema.sql` once in a fresh Supabase project. It sets up tables, constraints, policies, RPCs, Realtime, and the room-image storage bucket. It is a bootstrap script, not a rerunnable migration runner.
 3. Create the reception user in Supabase Auth. Set their **app metadata**, not user metadata, to `{"role":"admin"}` using the Supabase Admin API or trusted dashboard tooling. Never provide the service key to the browser.
-4. Sign in at `/admin`. Add one row per physical room, approved nightly rates in rupees, capacity, images, and actual cancellation terms. Rates must include all applicable taxes.
+4. Sign in at `/admin`. The dashboard verifies the account role and refreshes stale access-token claims before loading data or saving changes. If a permission error remains, sign out and sign in again, then verify the admin RLS policies. Add one row per physical room, approved nightly rates in rupees, capacity, images, and actual cancellation terms. Rates must include all applicable taxes.
 5. Uploaded room images and rates appear on the guesthouse page. Disabling a room removes it from new availability; existing reservations remain intact.
 
-No production inventory, rates, users, reviews, or impact statistics are fabricated or seeded.
+The approved 34-room inventory and tax-inclusive season/non-season prices are recorded in `data/room-prices.csv`. The bootstrap includes this inventory. Existing projects must run `supabase/migrations/20260929_room_inventory.sql` in the SQL Editor (do not rerun the bootstrap). Non-season prices are currently used for bookings; season prices are stored for later scheduling. Duplicate rows 28 and 29 from the supplied table appear only once. The previous Studio 101 entry is preserved but disabled. No users, reviews, or impact statistics are seeded. Run `node --use-system-ca scripts/check-availability.cjs` to check the configured room counts and the live availability RPC without creating bookings or sending emails.
 
 ## Connect Razorpay
 
@@ -92,3 +92,11 @@ Import the repository into Vercel as a Next.js project, configure the environmen
 - [Meta WhatsApp template messages](https://whatsapp.github.io/WhatsApp-Nodejs-SDK/api-reference/messages/template/)
 
 The dependency lockfile pins tested versions. A PostCSS override keeps Next.js 15's transitive dependency on the patched release.
+
+## Room management
+
+Categories: Studio Suite (1 bed, rooms 22 and 34), Twin Room (2 beds, 23 rooms), Triple Room (3 beds, rooms 1, 3, 4, 11, 12), Family Suite (4 beds, rooms 2, 7, 18, 27).
+
+In `/admin` ? Rooms, edit both tax-inclusive nightly prices in rupees. Non-season prices are the live booking prices. Upload up to 12 JPEG/PNG/WebP images (5 MB each), add HTTPS image URLs, remove gallery entries, or choose a cover. The guesthouse gallery reflects saved images. Deleting a room requires confirmation and is blocked when booking history exists; turn off Open for bookings instead. Removing a gallery entry does not delete shared storage assets.
+
+The inventory migration is transactional and rerunnable, preserves booking references and custom galleries, and updates the approved rates when rerun. Back up later rate edits before rerunning this initial import.

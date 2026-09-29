@@ -13,7 +13,7 @@ const stay = {
   checkout: "2090-10-12",
   adults: 2,
   children: 0,
-  room: "standard",
+  room: "twin",
 };
 test("accepts a valid two-night stay", () => {
   assert.equal(staySchema.safeParse(stay).success, true);

@@ -15,3 +15,13 @@ The photographs in `public/images` were downloaded from [Auromode’s official w
 | family    | https://static.wixstatic.com/media/a7d405_910e9e8a0bda4e6e97ad499218323ad0~mv2.jpg |
 
 Images are served locally in optimized dimensions. Font files are distributed under the included SIL Open Font Licenses.
+
+## Approved room category photographs (September 2026)
+
+Supplied by the client for this project; downloaded from Auromode's Wix media hosting:
+- `public/images/studio.jpg`: https://static.wixstatic.com/media/a7d405_c309e2fc27314df79c5f7b5622cd4763~mv2.jpg
+- `public/images/twin.jpg`: https://static.wixstatic.com/media/a7d405_f1dcb3008de84a2a9115a33a8791478c~mv2.jpg
+- `public/images/triple.jpg`: https://static.wixstatic.com/media/a7d405_a614e01121c94b7983ae28ea2d73688b~mv2.jpg
+- `public/images/family-suite.jpg`: https://static.wixstatic.com/media/a7d405_6a536e2663a944b78f7cc3e057d2c186~mv2.jpg
+
+Local gallery photographs are delivered through Next.js image optimization.

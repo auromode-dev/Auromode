@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/amenities/hive",
     "/amenities/tanto",
     "/amenities/to-be-two",
+    "/amenities/offices",
     "/explore",
     "/contact",
     "/book",

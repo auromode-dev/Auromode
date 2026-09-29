@@ -1,4 +1,5 @@
-﻿import { z } from "zod";
+import { roomCategories, roomCapacity } from "@/lib/rooms";
+import { z } from "zod";
 export const day = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/)
@@ -12,7 +13,7 @@ export const staySchema = z
     checkout: day,
     adults: z.coerce.number().int().min(1).max(4),
     children: z.coerce.number().int().min(0).max(3).default(0),
-    room: z.enum(["standard", "deluxe", "family", "long-stay"]),
+    room: z.enum(roomCategories),
   })
   .superRefine((v, ctx) => {
     const start = new Date(v.checkin).getTime(),
@@ -41,12 +42,12 @@ export const staySchema = z
         message: "For stays over 180 nights, please contact reception",
         path: ["checkout"],
       });
-    const capacity = v.room === "family" ? 4 : 2;
+    const capacity = roomCapacity[v.room];
     if (v.adults + v.children > capacity)
       ctx.addIssue({
         code: "custom",
         message:
-          "Your party exceeds this room’s capacity. Choose a family room or contact reception.",
+          "Your party exceeds this room’s capacity. Choose a larger room category.",
         path: ["adults"],
       });
   });

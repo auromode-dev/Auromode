@@ -1,4 +1,5 @@
-﻿import { chromium } from "@playwright/test";
+import { checkAvailabilityUI } from "./availability-browser";
+import { chromium } from "@playwright/test";
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
 async function main() {
@@ -54,29 +55,16 @@ async function main() {
   );
   assert.ok(imageResults.every((image) => image.loaded));
   console.log("PASS local photography");
-  await page.goto(
-    "http://localhost:3000/book?checkin=2090-10-10&checkout=2090-10-12&adults=2",
+  await checkAvailabilityUI(page);
+  await page.route("**/api/contact", (route) =>
+    route.fulfill({
+      status: 503,
+      contentType: "application/json",
+      body: JSON.stringify({
+        error: "Enquiry service unavailable in this test.",
+      }),
+    }),
   );
-  await page.getByRole("button", { name: "Check availability" }).click();
-  await page.getByText("Your details", { exact: true }).last().waitFor();
-  await page.getByLabel("First name").fill("Test");
-  await page.getByLabel("Last name").fill("Guest");
-  await page.getByLabel("Email", { exact: true }).fill("guest@example.com");
-  await page.getByLabel("Phone", { exact: true }).fill("9999999999");
-  await page.getByRole("checkbox").first().check();
-  await page.getByRole("button", { name: "Prepare email enquiry" }).click();
-  assert.ok(
-    (
-      await page
-        .getByRole("link", { name: "Open email and send enquiry" })
-        .getAttribute("href")
-    )?.startsWith("mailto:"),
-  );
-  console.log("PASS booking enquiry fallback");
-  await page.getByLabel("Check-out", { exact: true }).fill("2090-10-09");
-  await page.getByRole("button", { name: "Check availability" }).click();
-  await page.getByText("Check-out must be after check-in").waitFor();
-  console.log("PASS invalid date protection");
   await page.goto("http://localhost:3000/contact");
   await page.getByLabel("Your name").fill("Test Guest");
   await page.getByLabel("Email", { exact: true }).fill("guest@example.com");

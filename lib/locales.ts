@@ -19,7 +19,7 @@
       "Créé en 1975 comme atelier de confection, Auromode est devenu une maison d’hôtes en 2014. Aujourd’hui, hébergement, coworking, restauration et rencontres se retrouvent sur un même campus au cœur d’Auroville.",
     stayTitle: "Un espace pour se reposer.",
     stayText:
-      "Chambre Standard, chambre Deluxe, chambre Familiale ou long séjour : contactez la réception pour connaître les disponibilités, les équipements et les tarifs actuels.",
+      "Studio Suite (1 lit), Twin Room (2 lits), Triple Room (3 lits) et Family Suite (4 lits). Consultez les disponibilités et les tarifs en ligne selon vos dates.",
     workTitle: "Travailler, partager, découvrir.",
     work: "Hive Coworking propose des espaces de travail flexibles, des zones privées, des salles de réunion et une connexion Internet haut débit. Contactez-nous pour les formules et disponibilités.",
     eat: "Au Tanto Restaurant, prenez le temps de partager un repas. Demandez à la réception le menu actuel, les horaires et les options alimentaires.",
@@ -61,7 +61,7 @@
       "1975-இல் ஆடைத் தொழிற்சாலையாகத் தொடங்கிய ஆரோமோடு, 2014-இல் விருந்தினர் இல்லமாக மாறியது. இன்று தங்குமிடம், பணியிடம், உணவகம் மற்றும் சமூகச் சந்திப்புகள் ஒரே வளாகத்தில் இணைகின்றன.",
     stayTitle: "ஓய்வெடுக்க உங்களுக்கான ஓர் இடம்.",
     stayText:
-      "ஸ்டாண்டர்டு அறை, டீலக்ஸ் அறை, குடும்ப அறை அல்லது நீண்டகாலத் தங்குமிடம் — அறை கிடைப்பது, வசதிகள் மற்றும் தற்போதைய கட்டணங்களை அறிய வரவேற்பகத்தைத் தொடர்புகொள்ளுங்கள்.",
+      "ஸ்டுடியோ சூட் (1 படுக்கை), ட்வின் அறை (2 படுக்கைகள்), டிரிபிள் அறை (3 படுக்கைகள்), குடும்ப சூட் (4 படுக்கைகள்). உங்கள் தேதிகளுக்கான அறைகள் மற்றும் கட்டணங்களை இணையத்தில் பார்க்கலாம்.",
     workTitle: "பணியாற்றுங்கள். பகிருங்கள். கண்டறியுங்கள்.",
     work: "ஹைவ் கோவொர்க்கிங்: நெகிழ்வான பணியிடங்கள், தனிப்பட்ட பணிப் பகுதிகள், கூட்ட அறைகள் மற்றும் அதிவேக இணையம். உறுப்பினர் திட்டங்கள் மற்றும் இட வசதிகள் குறித்து விசாரிக்கவும்.",
     eat: "டான்டோ உணவகத்தில் நிதானமாக உணவைப் பகிர்ந்து மகிழுங்கள். தற்போதைய உணவுப் பட்டியல், திறந்திருக்கும் நேரம் மற்றும் உணவுத் தேவைகள் குறித்து வரவேற்பகத்தில் விசாரிக்கவும்.",

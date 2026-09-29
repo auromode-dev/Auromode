@@ -15,12 +15,14 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   const db = database();
-  if (!db || !paymentsEnabled())
-    return NextResponse.json({
-      mode: "enquiry",
-      message:
-        "Please contact reception to confirm your dates and receive current rates.",
-    });
+  if (!db)
+    return NextResponse.json(
+      {
+        error:
+          "Availability is temporarily unavailable. Please try again shortly.",
+      },
+      { status: 503 },
+    );
   const { data, error } = await db.rpc("available_rooms", {
     p_category: parsed.data.room,
     p_checkin: parsed.data.checkin,
@@ -29,8 +31,11 @@ export async function POST(request: Request) {
   });
   if (error)
     return NextResponse.json(
-      { error: "We could not check availability. Please contact reception." },
+      { error: "We could not check availability. Please try again shortly." },
       { status: 503 },
     );
-  return NextResponse.json({ mode: "live", rooms: data });
+  return NextResponse.json(
+    { mode: "live", rooms: data ?? [], checkoutEnabled: paymentsEnabled() },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 }

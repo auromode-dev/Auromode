@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     p_category: parsed.data.room,
     p_checkin: parsed.data.checkin,
     p_checkout: parsed.data.checkout,
-    p_guests: parsed.data.adults + parsed.data.children,
+    p_guests: Math.ceil((parsed.data.adults + parsed.data.children) / parsed.data.quantity),
   });
   if (error)
     return NextResponse.json(

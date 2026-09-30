@@ -13,7 +13,7 @@ export function AvailabilitySearch() {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
         router.push(
-          "/book?" +
+          "/availability?" +
             new URLSearchParams(
               data as unknown as Record<string, string>,
             ).toString(),

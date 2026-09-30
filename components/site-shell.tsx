@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { localized } from "@/lib/locales";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { isLanguage, type LanguageCode } from "@/lib/languages";
+import { LanguagePicker } from "@/components/language-picker";
+import { PublicTranslation } from "@/components/public-translation";
+import { useCallback, useEffect, useState } from "react";
 import {
   ArrowUpRight,
   Menu,
@@ -27,22 +29,47 @@ export function Logo() {
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const path = usePathname();
-  const router = useRouter();
-  const locale = path === "/fr" ? "fr" : path === "/ta" ? "ta" : "en";
-  const copy = locale === "en" ? null : localized[locale];
+  const [locale, setLocale] = useState<LanguageCode>("en");
+  const [translationError, setTranslationError] = useState("");
+  const [translating, setTranslating] = useState(false);
   useEffect(() => {
     setOpen(false);
-    document.documentElement.lang = locale;
-  }, [path, locale]);
+    const query = new URLSearchParams(window.location.search).get("lang");
+    let saved: string | null = null;
+    try {
+      saved = localStorage.getItem("auromode-language");
+    } catch {}
+    const wanted = query || saved || "en";
+    if (isLanguage(wanted)) {
+      setLocale(wanted);
+      if (query) {
+        try {
+          localStorage.setItem("auromode-language", wanted);
+        } catch {}
+      }
+    }
+  }, [path]);
+  const changeLanguage = useCallback((value: LanguageCode) => {
+    setTranslationError("");
+    setLocale(value);
+    try {
+      localStorage.setItem("auromode-language", value);
+    } catch {}
+    const url = new URL(window.location.href);
+    if (value === "en") url.searchParams.delete("lang");
+    else url.searchParams.set("lang", value);
+    window.history.replaceState(window.history.state, "", url);
+  }, []);
+  const translationFailed = useCallback((message: string) => {
+    setTranslating(false);
+    setTranslationError(message);
+    setLocale("en");
+  }, []);
   return (
     <>
       <div className="announcement">
-        {copy?.welcome || (
-          <>
-            A little closer to nature. A little closer to yourself.{" "}
-            <span>Welcome to Auroville.</span>
-          </>
-        )}
+        A little closer to nature. A little closer to yourself.{" "}
+        <span>Welcome to Auroville.</span>
       </div>
       <header className="header">
         <Logo />
@@ -60,51 +87,19 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <Link
               key={url}
               className={path.startsWith(url) ? "active" : ""}
-              href={
-                copy
-                  ? "#" +
-                    ["story", "stay", "campus", "explore", "contact"][
-                      [
-                        "/about",
-                        "/guesthouse",
-                        "/amenities",
-                        "/explore",
-                        "/contact",
-                      ].indexOf(url)
-                    ]
-                  : url
-              }
+              href={url}
               onClick={() => setOpen(false)}
             >
-              {copy
-                ? copy.nav[
-                    [
-                      "/about",
-                      "/guesthouse",
-                      "/amenities",
-                      "/explore",
-                      "/contact",
-                    ].indexOf(url)
-                  ]
-                : name}
+              {name}
             </Link>
           ))}
         </nav>
         <div className="header-actions">
-          <select
-            className="language-select"
-            aria-label="Language"
-            value={locale}
-            onChange={(e) =>
-              router.push(e.target.value === "en" ? "/" : "/" + e.target.value)
-            }
-          >
-            <option value="en">EN</option>
-            <option value="fr">FR</option>
-            <option value="ta">தமிழ்</option>
-          </select>
-          <Link className="button button-small" href={copy ? "#stay" : "/book"}>
-            {copy?.book || "Book your stay"} <ArrowUpRight size={15} />
+          {!path.startsWith("/admin") && (
+            <LanguagePicker value={locale} onChange={changeLanguage} />
+          )}
+          <Link className="button button-small" href="/book">
+            Book your stay <ArrowUpRight size={15} />
           </Link>
           <button
             className="menu-button"
@@ -116,6 +111,26 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           </button>
         </div>
       </header>
+      <PublicTranslation
+        language={locale}
+        path={path}
+        onError={translationFailed}
+        onBusy={setTranslating}
+      />
+      {(translating || translationError) && (
+        <div className="translation-status" translate="no" role="status">
+          {translating ? "Translating page..." : translationError}
+          {translationError && (
+            <button
+              type="button"
+              onClick={() => setTranslationError("")}
+              aria-label="Dismiss translation notice"
+            >
+              Dismiss
+            </button>
+          )}
+        </div>
+      )}
       <main id="main">{children}</main>
       <footer>
         <div className="footer-top">

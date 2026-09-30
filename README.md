@@ -24,7 +24,7 @@ npm start
 
 - Editorial home page, manual hero photo carousel, campus cards, subtle motion, responsive navigation, and reduced-motion support.
 - About, guesthouse, amenities, Hive Coworking, Tanto Restaurant, To Be Two, Auroville exploration, contact, and booking pages.
-- French and Tamil welcome pages at `/fr` and `/ta`, with translated navigation and essential campus, stay, and contact information. Detailed pages, checkout, admin, and transactional messages remain English; the localized pages disclose this.
+- Ten-language flag selector and Azure-powered automatic translation across public pages. Admin and transactional communications remain English; private form values and booking references are excluded.
 - Validated availability and booking endpoints; tax-inclusive INR prices are supplied by real room inventory, not the client.
 - PostgreSQL exclusion constraints prevent overlapping reservations. A transaction lock serializes reservations, and pending holds expire after 15 minutes. Check-out dates are exclusive, so same-day turnover is allowed.
 - Razorpay order creation, HMAC callback verification, captured-payment reconciliation, signed webhooks, and late-payment review. Availability quotes are checked again transactionally before creating an order.
@@ -79,7 +79,7 @@ Import the repository into Vercel as a Next.js project, configure the environmen
 - The site now uses property photographs downloaded from the official Auromode website; sources are recorded in `public/images/sources.json`. Confirm that these photographs are approved for the new site and map each photo to the correct live room category in `lib/content.ts`. The requested Standard/Deluxe/Family/Long Stay taxonomy differs from the existing website’s Studio/Standard/Triple/2 Bedrooms taxonomy and needs property approval. Font licenses are included under `public/fonts`.
 - Approve the story copy, amenities, accessibility details, room capacities, restaurant hours/menu, store collections, cancellation terms, privacy notice, and tax-inclusive rates with the property team.
 - Supply authentic reviews and verified impact statistics if those sections are wanted. Neither is invented here.
-- Expand French/Tamil translations to all detailed pages and checkout; have the existing translations reviewed by native speakers.
+- Have machine-translated public content and booking terms reviewed by native speakers.
 - Add production abuse protection/rate limits or CAPTCHA to public enquiry, availability, and reservation endpoints before exposing them to traffic.
 - Test simultaneous reservations, RLS with non-admin accounts, payment capture/webhook retries, expired holds, refunds, image storage, notifications, and scheduler behavior against configured services. Those live integration checks cannot run without project credentials.
 - Reception schedules are published as supplied. Google Maps embeds are third-party network content and can be blocked by privacy settings.
@@ -100,3 +100,31 @@ Categories: Studio Suite (1 bed, rooms 22 and 34), Twin Room (2 beds, 23 rooms),
 In `/admin` ? Rooms, edit both tax-inclusive nightly prices in rupees. Non-season prices are the live booking prices. Upload up to 12 JPEG/PNG/WebP images (5 MB each), add HTTPS image URLs, remove gallery entries, or choose a cover. The guesthouse gallery reflects saved images. Deleting a room requires confirmation and is blocked when booking history exists; turn off Open for bookings instead. Removing a gallery entry does not delete shared storage assets.
 
 The inventory migration is transactional and rerunnable, preserves booking references and custom galleries, and updates the approved rates when rerun. Back up later rate edits before rerunning this initial import.
+
+## Availability and multiple rooms
+
+The home search opens `/availability`. Results are shown before a separate Book now step for guest details and payment. If the chosen option is unavailable, live suggestions check other room categories (including multiple rooms of the same category) and dates up to three days earlier/later, preserving the stay length. Suggestions are rechecked when selected; at least one adult is required in each room.
+
+Existing Supabase projects must run `supabase/migrations/20260930_multi_room_bookings.sql` to enable multi-room checkout. The fresh-project bootstrap includes it. Multi-room reservations use one Razorpay order and separate linked booking records for each physical room. Each record stores its own share of the price, so revenue is not double-counted. Holds are created atomically; captured payments confirm the whole group. Late payments or a cancelled room put the group into payment review. Room-level notifications and cancellation/refund administration remain per booking record; use the shared group reference to identify related rooms. Refunds still require reception action in Razorpay.
+
+Razorpay keys are required to pay. Book now can open the details step without them, but payment is disabled with an explanation. Tests use isolated PostgreSQL (PGlite) and mocked provider/browser requests; no live payment is taken by automated tests.
+
+## Automatic translation (10 languages)
+
+English, Tamil, French, Hindi, German, Spanish, Italian, Dutch, Russian and Simplified Chinese are available in the flag selector. Flag images are stored locally; native-language names accompany them. The current public page is translated without resetting booking form values or changing routes. Preference is saved in the browser; `?lang=fr` (or another supported code) selects a language on a shared link. Legacy `/fr` and `/ta` links redirect to the translated home page.
+
+Create an Azure Translator resource on the F0 free tier, then copy its key and region from **Keys and Endpoint** into `.env.local` and the production environment:
+
+```env
+AZURE_TRANSLATOR_KEY=your_translator_key
+AZURE_TRANSLATOR_REGION=your_resource_region
+```
+
+Restart the local server or redeploy after setting these. The key is used only in `/api/translate`; never prefix it with `NEXT_PUBLIC_`. Without a configured key, or on provider failure, the site displays an English fallback notice. No translation subscription has been created by this implementation.
+
+The public-page translator covers visible text, labels, placeholders, image descriptions and new content from navigation/availability checks. Input values, textareas, editable content, admin pages, contact details and booking references are excluded. Add `translate="no"` or `data-private` around other private/deliberately untranslated output. It changes text-node values, not the React element structure, and restores English when switched off. Third-party payment windows, email/WhatsApp messages and browser-native validation messages are outside its scope. `lib/locales.ts` retains the previous welcome-page copy as a reference.
+
+Translation results are cached for 24 hours in each server process (maximum 12,000 entries). Requests are bounded and rate limited per process; serverless restarts/instances have separate caches and counters. Use Azure's F0 quota for the provider-level usage ceiling. This is display translation, not server-rendered multilingual SEO; canonical URLs stay on the original public pages. Review machine translations of cancellation and booking terms before launch.
+
+Reference: https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation/reference/v3/translate
+Flags: https://flagcdn.com/ (local SVG copies in `public/flags`).

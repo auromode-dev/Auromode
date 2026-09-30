@@ -3,8 +3,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = process.env.NEXT_PUBLIC_SITE_URL || "https://auromode.in";
   return [
     "",
-    "/fr",
-    "/ta",
     "/about",
     "/guesthouse",
     "/amenities",

@@ -14,6 +14,7 @@ export const staySchema = z
     adults: z.coerce.number().int().min(1).max(4),
     children: z.coerce.number().int().min(0).max(3).default(0),
     room: z.enum(roomCategories),
+    quantity: z.coerce.number().int().min(1).max(4).default(1),
   })
   .superRefine((v, ctx) => {
     const start = new Date(v.checkin).getTime(),
@@ -42,7 +43,13 @@ export const staySchema = z
         message: "For stays over 180 nights, please contact reception",
         path: ["checkout"],
       });
-    const capacity = roomCapacity[v.room];
+    const capacity = roomCapacity[v.room] * v.quantity;
+    if (v.adults < v.quantity)
+      ctx.addIssue({
+        code: "custom",
+        message: "Each room must have at least one adult",
+        path: ["adults"],
+      });
     if (v.adults + v.children > capacity)
       ctx.addIssue({
         code: "custom",

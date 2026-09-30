@@ -31,18 +31,30 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "Online reservations are not yet available. Please send your enquiry to reception.",
+          "Online payment is temporarily unavailable. No reservation has been made.",
       },
       { status: 503 },
     );
-  const { data, error } = await db.rpc("reserve_room", {
-    p_category: stay.data.room,
-    p_checkin: stay.data.checkin,
-    p_checkout: stay.data.checkout,
-    p_adults: stay.data.adults,
-    p_children: stay.data.children,
-    p_guest: { ...guest.data, expectedAmount: body.expectedAmount },
-  });
+  const { data, error } = await db.rpc(
+    stay.data.quantity > 1 ? "reserve_rooms" : "reserve_room",
+    {
+      ...(stay.data.quantity > 1 ? { p_quantity: stay.data.quantity } : {}),
+      p_category: stay.data.room,
+      p_checkin: stay.data.checkin,
+      p_checkout: stay.data.checkout,
+      p_adults: stay.data.adults,
+      p_children: stay.data.children,
+      p_guest: { ...guest.data, expectedAmount: body.expectedAmount },
+    },
+  );
+  if (error?.code === "PGRST202")
+    return NextResponse.json(
+      {
+        error:
+          "Multi-room booking is temporarily unavailable. No reservation has been made.",
+      },
+      { status: 503 },
+    );
   if (error || !data)
     return NextResponse.json(
       {
@@ -69,7 +81,10 @@ export async function POST(request: Request) {
       key: process.env.RAZORPAY_KEY_ID,
     });
   } catch {
-    await db.from("bookings").update({ status: "cancelled" }).eq("id", data.id);
+    await db
+      .from("bookings")
+      .update({ status: "cancelled" })
+      .in("id", data.ids || [data.id]);
     return NextResponse.json(
       {
         error:

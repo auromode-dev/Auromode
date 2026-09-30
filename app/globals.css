@@ -181,7 +181,8 @@ p {
   padding: 0 5%;
   gap: 32px;
   background: var(--ivory);
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 30;
 }
 .brand {
@@ -1863,3 +1864,10 @@ td select {
 .office-community li{border-bottom:1px solid #e3dcd1;font-size:13px}.office-community li>a,.office-community li>span{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:17px 0}.office-community a:hover{color:#8a6d3b}.office-community svg{flex-shrink:0}
 @media(max-width:900px){.office-layout{grid-template-columns:1fr;gap:32px}.office-community ul{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){.office-facilities,.office-community ul{grid-template-columns:1fr}.office-enquiry{padding:24px}.office-community h3{font-size:29px}}
+
+.language-picker{position:relative;flex-shrink:0}.language-trigger{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid #ded8ce;border-radius:6px;padding:8px;color:#344a3b;font-size:11px;cursor:pointer;min-height:38px}
+.language-picker img{width:24px;height:16px;object-fit:cover;flex-shrink:0;border-radius:2px}.language-options{position:absolute;right:0;top:calc(100% + 10px);z-index:150;width:245px;max-height:min(65vh,490px);overflow:auto;background:#f8f5f0;border:1px solid #e3dcd1;border-radius:10px;box-shadow:0 14px 38px #2e2a2526;padding:8px}
+.language-options>p{padding:8px 10px;margin:0;color:#746b61}.language-options>button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:transparent;padding:9px 10px;border-radius:6px;cursor:pointer;color:#2e2a25;font-size:14px}.language-options>button span{flex:1}.language-options small{display:block;font-size:10px;color:#756b5e;margin-top:2px}.language-options>button:hover,.language-options>button[aria-pressed=true]{background:#eae3d9}.language-picker button:focus-visible{outline:2px solid #8a6d3b;outline-offset:2px}
+.translation-status{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:160;background:#344a3b;color:#fff;padding:14px 20px;border-radius:8px;font-size:12px;max-width:calc(100vw - 32px);box-shadow:0 6px 25px #0002}.translation-status button{margin-left:12px;text-decoration:underline;cursor:pointer}
+html:not([lang=en]) .header .button{white-space:normal}html:is([lang=ta],[lang=hi],[lang=zh-Hans]) h1,html:is([lang=ta],[lang=hi],[lang=zh-Hans]) h2{font-family:Manrope,sans-serif;line-height:1.4;letter-spacing:0}
+@media(max-width:560px){.language-trigger{padding:6px;gap:4px;font-size:10px}.language-options{right:-50px;width:230px}.header .button-small{max-width:115px;white-space:normal}.language-trigger img{width:20px;height:14px}}

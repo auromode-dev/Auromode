@@ -9,6 +9,9 @@ export async function checkAvailabilityUI(page: Page) {
       cancellation_terms: "Test cancellation terms",
     },
   ];
+  await page.route("**/api/availability/suggestions", (route) =>
+    route.fulfill({ json: { suggestions: [] } }),
+  );
   let status = 200;
   let checkoutEnabled = false;
   await page.route("**/api/availability", (route) =>
@@ -42,15 +45,19 @@ export async function checkAvailabilityUI(page: Page) {
       .count(),
     0,
   );
+  await page.getByRole("button", { name: "Book now", exact: true }).click();
   await page.getByText(/Online payment is currently unavailable/).waitFor();
+  await page.getByRole("button", { name: "Back to availability" }).click();
   console.log(
     "PASS automatic availability and rates without payments or email",
   );
   checkoutEnabled = true;
   await page.getByRole("button", { name: "Check availability" }).click();
+  await page.getByRole("button", { name: "Book now", exact: true }).click();
   await page
     .getByRole("button", { name: "Continue to secure payment" })
     .waitFor();
+  await page.getByRole("button", { name: "Back to availability" }).click();
   console.log("PASS checkout offered separately when enabled");
   rooms = [];
   await page.getByLabel("Check-out", { exact: true }).fill("2090-10-13");
@@ -61,9 +68,7 @@ export async function checkAvailabilityUI(page: Page) {
     0,
   );
   await page.getByRole("button", { name: "Check availability" }).click();
-  await page
-    .getByText(/No rooms available for these dates and guests/)
-    .waitFor();
+  await page.getByText(/Your selected room option is unavailable/).waitFor();
   console.log("PASS no availability and invalidation after date changes");
   status = 503;
   await page.getByRole("button", { name: "Check availability" }).click();

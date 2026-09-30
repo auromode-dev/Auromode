@@ -18,6 +18,7 @@ type Booking = {
   status: string;
   payment_status: string;
   room_id: string;
+  group_id?: string | null;
   requests: string;
 };
 export function AdminDashboard() {
@@ -278,7 +279,19 @@ export function AdminDashboard() {
                     <br />
                     {b.checkout}
                   </td>
-                  <td>{rooms.find((r) => r.id === b.room_id)?.name || "—"}</td>
+                  <td>
+                    {rooms.find((r) => r.id === b.room_id)?.name || "-"}
+                    {b.group_id && (
+                      <details>
+                        <summary>Multi-room booking</summary>
+                        <span style={{ overflowWrap: "anywhere" }}>
+                          Group: {b.group_id}
+                        </span>
+                        <br />
+                        Each row is one room in the shared payment.
+                      </details>
+                    )}
+                  </td>
                   <td>₹{(b.amount / 100).toLocaleString("en-IN")}</td>
                   <td>{b.payment_status.replaceAll("_", " ")}</td>
                   <td>

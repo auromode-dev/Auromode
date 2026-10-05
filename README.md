@@ -2,6 +2,10 @@
 
 Next.js 15, TypeScript, Tailwind CSS 4, Framer Motion, Supabase/PostgreSQL, and Razorpay. A responsive hospitality website with local photography and fonts, live room availability, and integration code for live reservations.
 
+## Coding agent guide
+
+Project-specific coding instructions are in [AGENTS.md](AGENTS.md). Read this guide before changing booking logic, database migrations, admin access, translation or shared UI.
+
 ## Run locally
 
 ```sh

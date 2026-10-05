@@ -1,5 +1,6 @@
 "use client";
-import Link from "next/link";
+import { MotionLink as Link, MotionButton } from "@/components/motion-controls";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import {
   ArrowDown,
@@ -21,17 +22,22 @@ const slides = [
   { image: photos.room, alt: "A restful room filled with natural light" },
 ];
 export function Hero() {
+  const reduce = useReducedMotion();
   const [index, setIndex] = useState(0);
   return (
     <section className="hero">
-      <img
+      <motion.img
+        key={index}
+        initial={false}
+        animate={reduce ? { opacity: 1 } : { opacity: [0.65, 1] }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         className="hero-image"
         src={slides[index].image}
         alt={slides[index].alt}
         fetchPriority="high"
       />
       <div className="hero-shade" />
-      <div className="hero-content">
+      <motion.div className="hero-content" initial={false} animate={reduce ? { y: 0, opacity: 1 } : { y: [12, 0], opacity: [0.8, 1] }} transition={{ duration: 0.65, ease: "easeOut" }}>
         <div className="hero-eyebrow">
           <span /> ROOTED IN AUROVILLE. OPEN TO YOU.
         </div>
@@ -47,7 +53,7 @@ export function Hero() {
         <Link href="/guesthouse" className="button button-ivory">
           Discover your stay <ArrowUpRight size={18} />
         </Link>
-      </div>
+      </motion.div>
       <div className="hero-bottom">
         <span>
           <MapPin size={14} /> AUROVILLE, TAMIL NADU, INDIA
@@ -56,23 +62,23 @@ export function Hero() {
           SLOW DOWN. SCROLL ON. <ArrowDown size={16} />
         </a>
         <div className="hero-index" aria-label="Photo carousel">
-          <button
+          <MotionButton
             type="button"
             aria-label="Previous photo"
             onClick={() => setIndex((index + 2) % 3)}
           >
             <ChevronLeft size={17} />
-          </button>
+          </MotionButton>
           <span aria-live="polite">0{index + 1}</span>
           <i />
           <span>03</span>
-          <button
+          <MotionButton
             type="button"
             aria-label="Next photo"
             onClick={() => setIndex((index + 1) % 3)}
           >
             <ChevronRight size={17} />
-          </button>
+          </MotionButton>
         </div>
       </div>
       <span className="hero-side">

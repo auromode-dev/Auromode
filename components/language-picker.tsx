@@ -1,5 +1,7 @@
 ﻿"use client";
 import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { MotionButton } from "@/components/motion-controls";
 import { Check, ChevronDown } from "lucide-react";
 import { languages, type LanguageCode } from "@/lib/languages";
 export function LanguagePicker({
@@ -9,6 +11,7 @@ export function LanguagePicker({
   value: LanguageCode;
   onChange: (language: LanguageCode) => void;
 }) {
+  const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -36,7 +39,7 @@ export function LanguagePicker({
         }
       }}
     >
-      <button
+      <MotionButton
         ref={trigger}
         className="language-trigger"
         type="button"
@@ -48,9 +51,12 @@ export function LanguagePicker({
         <img src={`/flags/${current.flag}.svg`} alt="" width={24} height={16} />
         <span>{value === "zh-Hans" ? "ZH" : value.toUpperCase()}</span>
         <ChevronDown size={13} />
-      </button>
+      </MotionButton>
       {open && (
-        <div
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.18, ease: "easeOut" }}
           id="language-options"
           className="language-options"
           role="group"
@@ -77,7 +83,7 @@ export function LanguagePicker({
               {value === l.code && <Check size={15} aria-hidden="true" />}
             </button>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );

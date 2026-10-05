@@ -1,5 +1,7 @@
 "use client";
-import Link from "next/link";
+import { MotionLink as Link, MotionButton } from "@/components/motion-controls";
+import { PageTransition } from "@/components/page-transition";
+import { motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { isLanguage, type LanguageCode } from "@/lib/languages";
 import { LanguagePicker } from "@/components/language-picker";
@@ -27,6 +29,7 @@ export function Logo() {
   );
 }
 export function SiteShell({ children }: { children: React.ReactNode }) {
+  const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const path = usePathname();
   const [locale, setLocale] = useState<LanguageCode>("en");
@@ -73,11 +76,15 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       </div>
       <header className="header">
         <Logo />
-        <nav
+        <motion.nav
+          initial={false}
+          animate={{ opacity: open && !reduce ? [0.7, 1] : 1 }}
+          transition={{ duration: 0.2 }}
           aria-label="Main navigation"
           className={open ? "main-nav open" : "main-nav"}
         >
           {[
+            ["Home", "/"],
             ["Our Story", "/about"],
             ["Stay", "/guesthouse"],
             ["Work, Eat & More", "/amenities"],
@@ -86,14 +93,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           ].map(([name, url]) => (
             <Link
               key={url}
-              className={path.startsWith(url) ? "active" : ""}
+              className={(url === "/" ? path === "/" : path.startsWith(url)) ? "active" : ""}
               href={url}
               onClick={() => setOpen(false)}
             >
               {name}
             </Link>
           ))}
-        </nav>
+        </motion.nav>
         <div className="header-actions">
           {!path.startsWith("/admin") && (
             <LanguagePicker value={locale} onChange={changeLanguage} />
@@ -101,14 +108,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <Link className="button button-small" href="/book">
             Book your stay <ArrowUpRight size={15} />
           </Link>
-          <button
+          <MotionButton
             className="menu-button"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen(!open)}
           >
             {open ? <X /> : <Menu />}
-          </button>
+          </MotionButton>
         </div>
       </header>
       <PublicTranslation
@@ -131,7 +138,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           )}
         </div>
       )}
-      <main id="main">{children}</main>
+      <PageTransition>{children}</PageTransition>
       <footer>
         <div className="footer-top">
           <div>

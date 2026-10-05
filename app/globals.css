@@ -64,12 +64,12 @@
 }
 
 :root {
-  --ivory: #f8f5f0;
-  --cream: #eeeae1;
-  --ink: #2e3029;
-  --green: #344a3b;
-  --muted: #797b70;
-  --earth: #8a6d3b;
+  --ivory: #faf8f4;
+  --cream: #efe8de;
+  --ink: #293c30;
+  --green: #354e3d;
+  --muted: #70675d;
+  --earth: #896344;
   --border: #deded2;
 }
 * {
@@ -126,8 +126,8 @@ h1,
 h2,
 h3,
 blockquote {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-weight: 400;
+  font-family: "Manrope", sans-serif;
+  font-weight: 500;
 }
 h2 {
   font-size: clamp(40px, 4.2vw, 62px);
@@ -240,7 +240,7 @@ p {
   line-height: 1.5;
   transition:
     background 0.2s,
-    transform 0.2s;
+    border-color 0.2s;
   white-space: nowrap;
 }
 .button:hover {
@@ -1871,3 +1871,114 @@ td select {
 .translation-status{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:160;background:#344a3b;color:#fff;padding:14px 20px;border-radius:8px;font-size:12px;max-width:calc(100vw - 32px);box-shadow:0 6px 25px #0002}.translation-status button{margin-left:12px;text-decoration:underline;cursor:pointer}
 html:not([lang=en]) .header .button{white-space:normal}html:is([lang=ta],[lang=hi],[lang=zh-Hans]) h1,html:is([lang=ta],[lang=hi],[lang=zh-Hans]) h2{font-family:Manrope,sans-serif;line-height:1.4;letter-spacing:0}
 @media(max-width:560px){.language-trigger{padding:6px;gap:4px;font-size:10px}.language-options{right:-50px;width:230px}.header .button-small{max-width:115px;white-space:normal}.language-trigger img{width:20px;height:14px}}
+/* Reference-inspired hospitality refresh: soft geometry and earthy tones. */
+h1 em,h2 em,blockquote em {font-style:normal}
+h2 {font-size:clamp(30px,3.2vw,46px);letter-spacing:-1.6px;line-height:1.2}
+.button {border-radius:999px;gap:16px}
+.button:hover {background:var(--earth);border-color:var(--earth)}
+.header {height:92px;gap:20px;padding:0 3%;background:#faf8f4f5;backdrop-filter:blur(16px);border-bottom:1px solid #354e3d12}
+.main-nav {border-radius:999px;background:#eaece5;padding:6px;gap:2px;margin:0 auto}
+.main-nav>a {padding:10px 14px;white-space:nowrap;font-size:11px;border-radius:999px;transition:background .2s,color .2s}
+.main-nav>a:after {display:none}
+.main-nav>a:hover,.main-nav>a.active {background:var(--green);color:white}
+.language-trigger {border-radius:999px}
+.hero {margin:16px 24px 0;border-radius:24px;min-height:620px;height:calc(100svh - 165px);max-height:820px}
+.hero-shade {background:linear-gradient(180deg,#142b23ad 0%,#1d302961 50%,#19291fb8 100%)}
+.hero-content {max-width:1000px;margin:auto;text-align:center;padding:75px 30px 140px}
+.hero-eyebrow {justify-content:center;letter-spacing:2.6px;font-size:10px;margin-bottom:22px}
+.hero-eyebrow>span {display:none}
+.hero h1 {font-size:clamp(44px,5.6vw,80px);font-weight:400;line-height:1.12;letter-spacing:-3px}
+.hero h1 em {color:#efe3d2}
+.hero-content p {margin:20px 0 25px}
+.hero-bottom {bottom:80px;left:5%;right:5%;letter-spacing:1.2px}
+.hero-side {display:none}
+.hero-index button {width:36px;height:36px}
+.search-wrap {position:relative;z-index:2;max-width:1020px;padding:0 24px;margin:-48px auto 0}
+.availability {grid-template-columns:1fr 1fr .8fr 1fr;gap:22px;background:#fffdf9;padding:25px 30px;border:1px solid #e7e0d5;border-radius:999px;box-shadow:0 16px 48px #293c3012}
+.availability-note {display:none}
+.availability label>span {color:var(--earth);letter-spacing:1px}
+.availability .button {min-height:52px;padding:15px 20px}
+.section {padding-top:95px;padding-bottom:95px}
+.stay-guides .section-heading,.ecosystem .section-heading {display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;margin-bottom:48px}
+.ecosystem .section-heading p {margin-top:18px}
+.guide-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:60px}
+.guide-card>svg {color:var(--earth);margin-bottom:18px}
+.guide-card h3 {font-size:20px;letter-spacing:-.6px;line-height:1.4;margin-bottom:12px}
+.guide-card p {margin-bottom:22px;max-width:310px;line-height:1.9}
+.guide-card .button {font-size:10px;padding:10px 16px}
+.ecosystem {padding-top:30px}
+.experience-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 28px}
+.experience-image {height:300px;border-radius:16px}
+.card-tag {border-radius:999px;padding:6px 13px}
+.card-heading {justify-content:flex-start;gap:18px;margin-top:20px}
+.card-heading>span {order:-1;font-size:27px;color:var(--earth);font-weight:400}
+.card-heading h3 {font-size:22px;font-weight:500}
+.experience-card p,.card-link {margin-left:52px}
+.intro {background:var(--cream);border-radius:24px;max-width:1120px;padding:64px;gap:65px;margin-bottom:90px}
+.intro h2 {font-size:clamp(30px,3vw,43px)}
+.intro-main,.explore-photo img,.large-photo {border-radius:18px}
+.story-stamp {transform:none;width:100px;height:100px;right:-8px}
+.story-stamp strong {font-family:Manrope,sans-serif;font-size:25px}
+.intro-signoff,.eyebrow {color:var(--earth)}
+.section-heading h2,.explore-copy h2 {font-size:clamp(30px,3.2vw,46px)}
+.benefits {background:#e8ede5}
+.benefits h2 {font-size:clamp(28px,3vw,42px)}
+.benefit-grid svg {color:var(--earth)}
+.philosophy blockquote {font-size:clamp(25px,3vw,42px);line-height:1.45;letter-spacing:-1px}
+.cta-banner {background:var(--green);border-radius:24px;margin:0 24px}
+.cta-banner h2 {font-size:clamp(32px,4vw,56px)}
+.cta-banner .eyebrow {color:#d8c4a9}
+.page-hero {border-radius:22px;overflow:hidden}
+.page-hero h1,.page-heading h1 {font-size:clamp(36px,4.5vw,64px);line-height:1.2;letter-spacing:-1.8px}
+.room-card,.booking-aside,.contact-card,.office-enquiry {border-radius:16px;overflow:hidden}
+.room-body h3,.booking-aside h3 {font-size:26px;line-height:1.3}
+@media(max-width:1150px) and (min-width:801px) {
+ .header {gap:12px;padding:0 20px}.brand-logo {width:105px}.main-nav>a {padding:9px 8px;font-size:10px}.header-actions {gap:8px}.header .button {padding:12px 14px;font-size:10px}
+}
+@media(max-width:800px) {
+ .header {height:80px;padding:0 20px}.main-nav {top:80px;border-radius:0 0 20px 20px;padding:18px;background:var(--ivory)}.main-nav>a {font-size:14px;padding:12px 18px}.hero {margin:12px 16px 0;height:610px;min-height:0}.hero-content {padding:85px 25px 130px}.hero h1 {font-size:58px;letter-spacing:-2px}.hero-bottom {bottom:95px}.hero-index {display:flex;gap:8px}.hero-index i {width:24px}.hero-bottom>a {display:none}
+ .availability {gap:16px;border-radius:24px;padding:22px;grid-template-columns:1fr 1fr}.availability .button {grid-column:2}.availability label:nth-child(2) {border:0}.availability label:nth-child(3) {grid-column:1}.search-wrap {max-width:660px;margin-top:-65px}
+ .section {padding:65px 30px}.guide-grid {gap:25px}.guide-card h3 {font-size:18px}.experience-image {height:240px}.card-heading h3 {font-size:19px}.intro {margin:0 24px 65px;padding:38px;gap:35px}.intro h2 {font-size:32px}.story-stamp {right:0}.cta-banner {margin:0 16px}
+}
+@media(max-width:560px) {
+ .header {padding:0 14px;gap:8px}.brand-logo {width:85px}.header-actions {gap:6px}.header .button-small {font-size:9px;padding:10px 12px;max-width:105px}.header .button-small svg {display:none}
+ .hero {margin:10px 10px 0;border-radius:18px;height:555px}.hero-content {padding:62px 20px 120px}.hero h1 {font-size:43px;letter-spacing:-1.8px}.hero-eyebrow {font-size:8px;letter-spacing:1.4px}.hero-content p {margin:20px 0 24px}.hero-bottom {left:20px;right:20px;bottom:92px;font-size:6px;letter-spacing:.7px}.hero-index {gap:7px}.hero-index i {display:none}.hero-index button {width:30px;height:30px}.hero-image {object-position:55% center}
+ .search-wrap {padding:0 22px;margin-top:-66px}.availability {padding:20px 18px;gap:18px 12px;border-radius:22px}.availability .button {padding:12px;font-size:10px;gap:8px;min-height:46px}.availability input,.availability select {font-size:12px}.availability label>span {font-size:8px}
+ .section {padding:60px 24px}.stay-guides .section-heading,.ecosystem .section-heading {margin-bottom:32px}.guide-grid {grid-template-columns:1fr;gap:28px}.guide-card {padding-bottom:28px;border-bottom:1px solid var(--border)}.guide-card:last-child {padding-bottom:0;border:0}.guide-card h3 {font-size:21px}.guide-card p {max-width:none}.guide-card>svg {margin-bottom:12px}
+ .experience-grid {grid-template-columns:1fr;gap:32px}.experience-image {height:235px}.card-heading h3 {font-size:21px}.ecosystem {padding-top:10px}.intro {margin:0 16px 55px;padding:30px 24px;grid-template-columns:1fr}.intro h2 {font-size:32px}.intro-images {padding-right:10px}.intro-main {height:290px}.story-stamp {width:90px;height:90px}.story-stamp strong {font-size:24px}.story-stamp span {font-size:5px}
+ .section-heading h2,.explore-copy h2 {font-size:32px}.benefits h2 {font-size:30px}.cta-banner {padding:38px 24px;border-radius:18px}.cta-banner h2 {font-size:36px}.page-hero h1,.page-heading h1 {font-size:38px}.philosophy blockquote {font-size:27px}
+}
+
+/* Transform animations are owned by Framer Motion. */
+.experience-card {display:block}
+.language-trigger > svg {transition:transform .18s ease}
+.language-trigger[aria-expanded="true"] > svg {transform:rotate(180deg)}
+/* Branded availability calendar and guest picker. */
+.availability input[type="hidden"] {display:none}
+.stay-field {min-width:0;border-right:1px solid var(--border);padding-right:20px}
+.stay-field-label {display:flex;align-items:center;gap:7px;color:var(--earth);font-size:9px;letter-spacing:1px;margin-bottom:8px}
+.stay-trigger {display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:0;min-height:28px;border:0;background:transparent;text-align:left;font-size:13px;color:var(--ink)}
+.stay-trigger svg {flex-shrink:0;transition:transform .18s}
+.stay-trigger[aria-expanded=true] svg {transform:rotate(180deg)}
+.stay-picker {position:absolute;top:calc(100% + 12px);left:20px;z-index:10;width:320px;padding:20px;border:1px solid #e0d7ca;border-radius:20px;background:#fffdf9;box-shadow:0 18px 55px #293c3026;color:var(--ink)}
+.guest-picker {left:auto;right:24%;width:250px}
+.picker-title {display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--earth);padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.picker-title button,.calendar-month button {display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:50%;background:var(--cream);color:var(--green)}
+.calendar-month {display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.calendar-month strong {font-size:13px;font-weight:600}
+.calendar-month button:disabled {opacity:.3;cursor:not-allowed}
+.calendar-week,.calendar-days {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center}
+.calendar-week {font-size:10px;color:var(--earth);margin-bottom:8px}
+.calendar-days button {height:36px;padding:0;border:1px solid transparent;background:transparent;border-radius:50%;font-size:12px;color:var(--ink)}
+.calendar-days button:not(:disabled):hover {background:var(--cream);border-color:#b79a79}
+.calendar-days button[aria-current=date] {border-color:var(--earth)}
+.calendar-days button.in-stay {background:#edf0e8}
+.calendar-days button[aria-pressed=true] {background:var(--green);color:white}
+.calendar-days button:disabled {color:#bcb8b0;cursor:not-allowed;opacity:1}
+.calendar-hint {border-top:1px solid var(--border);margin-top:15px;padding-top:12px;font-size:11px}
+.guest-picker [role=radio] {display:flex;align-items:center;justify-content:space-between;width:100%;padding:12px 14px;border:0;border-radius:10px;background:transparent;color:var(--ink);font-size:13px;text-align:left}
+.guest-picker [role=radio]:hover {background:var(--cream)}
+.guest-picker [aria-checked=true] {background:var(--green);color:white}
+.stay-error {grid-column:1/-1;color:#923e30}
+@media(max-width:800px){.stay-field:nth-of-type(2){border:0}.stay-field:nth-of-type(3){grid-column:1;border:0}.guest-picker{right:20px}.stay-picker{top:calc(100% + 8px)}}
+@media(max-width:560px){.stay-field{padding-right:8px}.stay-field-label{font-size:8px}.stay-trigger{font-size:12px}.stay-picker{left:0;right:0;width:100%;padding:16px}.calendar-days button{height:37px}}

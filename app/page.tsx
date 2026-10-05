@@ -1,7 +1,8 @@
 import { Hero } from "@/components/hero";
-import Link from "next/link";
+import { MotionLink as Link } from "@/components/motion-controls";
 import {
-  ArrowDown,
+  BedDouble,
+  BriefcaseBusiness,
   ArrowUpRight,
   Leaf,
   MapPin,
@@ -9,7 +10,6 @@ import {
   Coffee,
   Sun,
   Heart,
-  MoveUpRight,
 } from "lucide-react";
 import { AvailabilitySearch } from "@/components/availability-search";
 import { Reveal } from "@/components/reveal";
@@ -24,51 +24,25 @@ export default function Home() {
       <div className="search-wrap">
         <AvailabilitySearch />
       </div>
-      <section className="intro section" id="welcome">
-        <Reveal className="intro-copy">
-          <span className="eyebrow">
-            <span className="tiny-leaf">✳</span> MORE THAN A DESTINATION
-          </span>
-          <h2>
-            Come for a stay.
-            <br />
-            Find a sense of <em>belonging.</em>
-          </h2>
-          <p>
-            Some places invite you to visit. Others invite you to become a part
-            of them.
-          </p>
-          <p>
-            Set amidst the green heart of Auroville, Auromode is a place for
-            curious travellers, thoughtful creators, and everyday explorers. A
-            comfortable room, an inspiring workspace, a shared meal — a world of
-            little connections.
-          </p>
-          <Link className="text-link" href="/about">
-            The story of Auromode <ArrowUpRight size={18} />
-          </Link>
-          <div className="intro-signoff">
-            <Leaf size={18} />
-            <span>Rooted in community. Growing since 1975.</span>
-          </div>
+      <section className="stay-guides section" id="welcome">
+        <Reveal className="section-heading">
+          <span className="eyebrow">STAY. WORK. EAT. CONNECT.</span>
+          <h2>A little space for<br />everything you love.</h2>
         </Reveal>
-        <Reveal className="intro-images">
-          <img
-            className="intro-main"
-            src={photos.garden}
-            alt="Quiet retreat surrounded by tropical greenery"
-            loading="lazy"
-          />
-          <div className="story-stamp">
-            <span>EST.</span>
-            <strong>1975</strong>
-            <span>GROWING TOGETHER</span>
-          </div>
-          <div className="intro-caption">
-            <span>Less rush. More life.</span>
-            <span>That’s the Auromode way.</span>
-          </div>
-        </Reveal>
+        <div className="guide-grid">
+          {[
+            { Icon: BedDouble, title: "Find your own retreat", text: "From solo escapes to family stays, find a comfortable room in the green heart of Auroville.", href: "/guesthouse", link: "Explore rooms" },
+            { Icon: BriefcaseBusiness, title: "Make room for good ideas", text: "Settle into Hive Coworking or discover an office of your own, surrounded by a thoughtful community.", href: "/amenities", link: "Explore workspaces" },
+            { Icon: Coffee, title: "Come together, naturally", text: "Share a meal at Tanto, discover the campus stores, and find a slower rhythm to your day.", href: "/amenities/tanto", link: "Discover Tanto" },
+          ].map(({ Icon, title, text, href, link }) => (
+            <Reveal key={title} className="guide-card">
+              <Icon size={30} strokeWidth={1.4} aria-hidden="true" />
+              <h3>{title}</h3>
+              <p>{text}</p>
+              <Link className="button button-small" href={href}>{link}<ArrowUpRight size={14} /></Link>
+            </Reveal>
+          ))}
+        </div>
       </section>
       <section className="ecosystem section">
         <Reveal className="section-heading">
@@ -114,6 +88,52 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
+      </section>
+      <section className="intro section">
+        <Reveal className="intro-copy">
+          <span className="eyebrow">
+            <span className="tiny-leaf">✳</span> MORE THAN A DESTINATION
+          </span>
+          <h2>
+            Come for a stay.
+            <br />
+            Find a sense of <em>belonging.</em>
+          </h2>
+          <p>
+            Some places invite you to visit. Others invite you to become a part
+            of them.
+          </p>
+          <p>
+            Set amidst the green heart of Auroville, Auromode is a place for
+            curious travellers, thoughtful creators, and everyday explorers. A
+            comfortable room, an inspiring workspace, a shared meal — a world of
+            little connections.
+          </p>
+          <Link className="text-link" href="/about">
+            The story of Auromode <ArrowUpRight size={18} />
+          </Link>
+          <div className="intro-signoff">
+            <Leaf size={18} />
+            <span>Rooted in community. Growing since 1975.</span>
+          </div>
+        </Reveal>
+        <Reveal className="intro-images">
+          <img
+            className="intro-main"
+            src={photos.garden}
+            alt="Quiet retreat surrounded by tropical greenery"
+            loading="lazy"
+          />
+          <div className="story-stamp">
+            <span>EST.</span>
+            <strong>1975</strong>
+            <span>GROWING TOGETHER</span>
+          </div>
+          <div className="intro-caption">
+            <span>Less rush. More life.</span>
+            <span>That’s the Auromode way.</span>
+          </div>
+        </Reveal>
       </section>
       <section className="benefits">
         <div className="benefits-inner">

@@ -22,11 +22,11 @@ const pages = {
     action: "Enquire about a workspace",
   },
   tanto: {
-    name: "Tanto Restaurant",
+    name: "Auromode Restaurant",
     eyebrow: "GOOD FOOD. BETTER COMPANY.",
     title: "Some connections begin at the table.",
     intro: "Pull up a chair.",
-    text: "A meal is a reason to pause, to gather, and to enjoy where you are. Tanto is part of the daily life of Auromode, welcoming neighbours, travellers, and familiar faces.",
+    text: "A meal is a reason to pause, to gather, and to enjoy where you are. Auromode Restaurant is part of the daily life of Auromode, welcoming neighbours, travellers, and familiar faces.",
     features: [
       "On-campus dining",
       "Shared meals",
@@ -36,7 +36,7 @@ const pages = {
     detail:
       "Contact reception for the current menu, dietary requirements, restaurant contact details, and opening hours before your visit.",
     image: photos.food,
-    action: "Plan a visit to Tanto",
+    action: "Plan a visit to Auromode Restaurant",
   },
   "to-be-two": {
     name: "To Be Two Store",

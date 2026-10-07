@@ -56,7 +56,7 @@ const community: { name: string; href?: string }[] = [
   { name: "Delicious Bites", href: "https://www.delicious-bites.com/" },
   { name: "Sarvam Computers", href: "https://sarvam-computers.business.site/" },
   { name: "To Be Two", href: "https://www.tobetwo.in/" },
-  { name: "Tanto", href: "http://tanto.in/" },
+  { name: "Auromode Restaurant", href: "/amenities/tanto" },
   { name: "Hibiscus Heroes", href: "http://www.hibiscusheroes.com/" },
   {
     name: "Avitra International Translators",
@@ -84,13 +84,11 @@ export function OfficeRentals() {
         <div>
           <span className="eyebrow">YOUR WORK, WITH ROOM TO GROW</span>
           <h2 id="offices-title">
-            Offices in a <em>greener setting.</em>
+            Workspaces <em>rooted in nature.</em>
           </h2>
         </div>
         <p>
-          Newly renovated offices at Auromode, available to rent in quiet and
-          green surroundings. Choose a space of 20, 30 or 40 sq. m. and become
-          part of our campus community.
+          Newly renovated offices at Auromode, set in quiet, green surroundings. Choose from 20, 30, or 40 sq. m. spaces and enjoy a workspace that gives your team room to focus, grow, and be part of a vibrant campus community.
         </p>
       </div>
       <div className="office-layout">

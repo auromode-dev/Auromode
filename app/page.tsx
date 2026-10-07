@@ -1,3 +1,4 @@
+import { GoogleReviews } from "@/components/google-reviews";
 import { Hero } from "@/components/hero";
 import { MotionLink as Link } from "@/components/motion-controls";
 import {
@@ -33,7 +34,7 @@ export default function Home() {
           {[
             { Icon: BedDouble, title: "Find your own retreat", text: "From solo escapes to family stays, find a comfortable room in the green heart of Auroville.", href: "/guesthouse", link: "Explore rooms" },
             { Icon: BriefcaseBusiness, title: "Make room for good ideas", text: "Settle into Hive Coworking or discover an office of your own, surrounded by a thoughtful community.", href: "/amenities", link: "Explore workspaces" },
-            { Icon: Coffee, title: "Come together, naturally", text: "Share a meal at Tanto, discover the campus stores, and find a slower rhythm to your day.", href: "/amenities/tanto", link: "Discover Tanto" },
+            { Icon: Coffee, title: "Come together, naturally", text: "Share a meal at Auromode Restaurant, discover the campus stores, and find a slower rhythm to your day.", href: "/amenities/tanto", link: "Discover Auromode Restaurant" },
           ].map(({ Icon, title, text, href, link }) => (
             <Reveal key={title} className="guide-card">
               <Icon size={30} strokeWidth={1.4} aria-hidden="true" />
@@ -199,6 +200,7 @@ export default function Home() {
           </Link>
         </Reveal>
       </section>
+      <GoogleReviews />
       <section className="philosophy">
         <Leaf size={30} strokeWidth={1} />
         <span className="eyebrow">THE SPIRIT OF AUROMODE</span>

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s | Auromode Auroville",
   },
   description:
-    "Stay, work, eat and connect at Auromode. Discover a welcoming guesthouse, Hive Coworking, Tanto Restaurant and meaningful experiences in Auroville.",
+    "Stay, work, eat and connect at Auromode. Discover a welcoming guesthouse, Hive Coworking, Auromode Restaurant and meaningful experiences in Auroville.",
   openGraph: {
     type: "website",
     siteName: "Auromode Auroville",

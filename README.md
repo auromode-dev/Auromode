@@ -132,3 +132,9 @@ Translation results are cached for 24 hours in each server process (maximum 12,0
 
 Reference: https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation/reference/v3/translate
 Flags: https://flagcdn.com/ (local SVG copies in `public/flags`).
+
+## Google reviews section
+
+The home page includes `components/google-reviews.tsx`. Set `GOOGLE_REVIEWS_URL` to the public Google Maps profile/reviews link and `GOOGLE_WRITE_REVIEW_URL` to the link from Business Profile > Ask for reviews. Store these in `.env.local` and deployment settings; restart/redeploy after changing them. Without these URLs, the section links to a clearly labeled Google Maps search for Auromode and explains how to leave a review.
+
+No reviews, rating or count are hardcoded. The component accepts a review feed for a future approved Business Profile integration, but no API fetching, OAuth, synchronization or notifications are connected yet.

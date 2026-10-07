@@ -16,7 +16,7 @@ export default function Offices() {
       <PageHero
         eyebrow="OFFICE RENTALS AT AUROMODE"
         title="A quieter place for your next big idea."
-        text="Newly renovated offices in green surroundings, with room for your team to grow."
+        text="Thoughtfully renovated offices surrounded by nature, with space to work, connect, and grow."
         image={photos.garden}
         cta={{ label: "Explore the offices", href: "#offices" }}
       />

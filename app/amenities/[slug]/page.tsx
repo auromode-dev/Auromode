@@ -39,21 +39,15 @@ const pages = {
     action: "Plan a visit to Auromode Restaurant",
   },
   "to-be-two": {
-    name: "To Be Two Store",
+    name: "To Be Two Showroom",
     eyebrow: "THOUGHTFULLY CHOSEN, SIMPLY BEAUTIFUL",
     title: "Everyday things. A little more meaning.",
     intro: "Discover something to take with you.",
-    text: "Explore the To Be Two store on the Auromode campus. Take your time, look a little closer, and find a piece that feels like you.",
-    features: [
-      "Curated collections",
-      "In-store discovery",
-      "Thoughtful gifting",
-      "On the Auromode campus",
-    ],
-    detail:
-      "Collections and stock change over time. Get in touch to confirm opening hours, ask about current products, or plan your visit.",
+    text: "Explore the To Be Two showroom on the Auromode campus. Take your time, look a little closer, and find a piece that feels like you.",
+    features: ["Curated collections", "Showroom discovery", "Thoughtful gifting", "On the Auromode campus"],
+    detail: "Collections and stock change over time. Get in touch to confirm opening hours, ask about current products, or plan your visit.",
     image: photos.store,
-    action: "Enquire about the store",
+    action: "Enquire about the showroom",
   },
 };
 export function generateStaticParams() {

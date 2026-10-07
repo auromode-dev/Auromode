@@ -25,6 +25,7 @@ export function Logo() {
         width={244}
         height={140}
       />
+      <span className="brand-subtitle">Apartments &amp; Guesthouse</span>
     </Link>
   );
 }
@@ -87,7 +88,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             ["Home", "/"],
             ["Our Story", "/about"],
             ["Stay", "/guesthouse"],
-            ["Work, Eat & More", "/amenities"],
+            ["Amenities", "/amenities"],
             ["Explore Auroville", "/explore"],
             ["Contact", "/contact"],
           ].map(([name, url]) => (

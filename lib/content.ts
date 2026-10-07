@@ -38,13 +38,10 @@ export const experiences = [
     href: "/amenities/tanto",
   },
   {
-    n: "04",
-    tag: "CONNECT",
-    title: "Discover the thoughtfully made.",
-    name: "To Be Two Store",
+    n: "04", tag: "CONNECT", title: "Discover the thoughtfully made.",
+    name: "To Be Two Showroom",
     text: "A conscious collection of everyday pieces, with a story behind every find.",
-    image: photos.store,
-    href: "/amenities/to-be-two",
+    image: photos.store, href: "/amenities/to-be-two",
   },
 ];
 export const roomTypes = [

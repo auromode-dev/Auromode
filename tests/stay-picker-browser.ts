@@ -26,7 +26,7 @@ async function main() {
    await page.getByRole('button',{name:'Guests',exact:true}).click();
    await page.keyboard.press('End');
    await page.keyboard.press('Enter');
-   assert.equal(await page.locator('input[name=adults]').inputValue(),'4');
+   assert.equal(await page.locator('input[name=adults]').inputValue(),'10');
    await page.getByRole('button',{name:'Check-in',exact:true}).click();
    await page.keyboard.press('Escape');
    assert.equal(await page.getByRole('dialog').count(),0);
@@ -36,7 +36,7 @@ async function main() {
    const url=new URL(page.url());
    assert.equal(url.searchParams.get('checkin'),arrival);
    assert.equal(url.searchParams.get('checkout'),departure);
-   assert.equal(url.searchParams.get('adults'),'4');
+   assert.equal(url.searchParams.get('adults'),'10');
    console.log(`PASS ${width}px calendar keyboard selection, date bounds, guest selection, Escape and search parameters`);
    await page.close();
   }

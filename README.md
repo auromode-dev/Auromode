@@ -138,3 +138,16 @@ Flags: https://flagcdn.com/ (local SVG copies in `public/flags`).
 The home page includes `components/google-reviews.tsx`. Set `GOOGLE_REVIEWS_URL` to the public Google Maps profile/reviews link and `GOOGLE_WRITE_REVIEW_URL` to the link from Business Profile > Ask for reviews. Store these in `.env.local` and deployment settings; restart/redeploy after changing them. Without these URLs, the section links to a clearly labeled Google Maps search for Auromode and explains how to leave a review.
 
 No reviews, rating or count are hardcoded. The component accepts a review feed for a future approved Business Profile integration, but no API fetching, OAuth, synchronization or notifications are connected yet.
+
+## Reception bookings
+
+Run `supabase/migrations/20261007_reception_bookings.sql` in the existing project SQL Editor after the multi-room migration. This migration is prepared locally; it is not applied automatically. In Admin > Rooms, the reception booking form replaces room creation; Edit still opens the room editor. Check dates/category/quantity, then enter guest details and confirm. The database rechecks inventory and the tax-inclusive total, reserves all rooms atomically, and confirms them as unpaid without Razorpay. These reservations block public availability until cancelled; no checkout-hold expiry applies. Each room is cancelled individually through Bookings. A request ID prevents duplicate bookings on retries. Existing notification events queue new-booking and confirmation messages; delivery still requires the configured worker/providers and guest WhatsApp opt-in. No offline payment is recorded by this form.
+
+### Groups and monthly stays
+Run `supabase/migrations/20261008_ten_guest_bookings.sql` after the reception migration to enable up to 10 total guests and 10 rooms per reservation. Per-room capacities and at least one adult per room still apply. Reception availability now uses the server `/api/availability` endpoint; server Supabase configuration must be valid. Monthly-stay enquiries on Guesthouse direct guests to reception for rates and terms.
+
+### Booking references and direct-booking emails
+Apply `supabase/migrations/20261009_booking_references.sql` after the ten-guest migration. References use `avapart_YYYYMMDD_R<room-number>_<unique-sequence>` based on check-in and are immutable; UUID primary keys remain internal. Existing records receive references without requeueing confirmation emails. Direct booking save calls an admin-authenticated endpoint to process the booking/group notification queue immediately. Failed jobs still require the scheduled `/api/notifications` worker for retry. Resend acceptance is not delivery confirmation.
+
+### Contact-form email acknowledgements
+Apply `supabase/migrations/20261010_contact_emails.sql` before deploying the contact-email changes. New enquiries are saved and immediately attempt a guest acknowledgement and admin notification independently. The acknowledgement does not confirm a reservation. Per-recipient flags and Resend idempotency keys support retries; configure the authenticated `/api/notifications` scheduler for failures. Existing enquiries are not mailed retroactively. API acceptance is not inbox delivery.

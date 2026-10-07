@@ -109,6 +109,40 @@ export default async function Guesthouse() {
           including taxes. Check your dates for live availability.
         </p>
       </section>
+      <section
+        className="section monthly-stay"
+        aria-labelledby="monthly-stay-title"
+      >
+        <div>
+          <span className="eyebrow">
+            A LITTLE LONGER. A LITTLE MORE AT HOME.
+          </span>
+          <h2 id="monthly-stay-title">
+            Make room for
+            <br />a longer stay.
+          </h2>
+        </div>
+        <div>
+          <p>
+            Planning to stay for a month, two months, or longer? Contact
+            reception to discuss your dates, room preferences, monthly rates,
+            and booking terms.
+          </p>
+          <p>Our team will help you plan your stay based on availability.</p>
+          <Link
+            className="button"
+            href="/contact?subject=Monthly%20stay%20enquiry"
+          >
+            Enquire about a monthly stay <ArrowUpRight size={16} />
+          </Link>
+          <a
+            className="text-link"
+            href="https://wa.me/917871562343?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20a%20monthly%20stay%20at%20Auromode."
+          >
+            Chat with reception <ArrowUpRight size={16} />
+          </a>
+        </div>
+      </section>
       <section className="faq">
         <span className="eyebrow" style={{ textAlign: "center" }}>
           A FEW THINGS YOU MIGHT WONDER

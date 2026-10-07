@@ -1,3 +1,4 @@
+import { processContactEmails } from "@/lib/contact-notifications";
 ﻿import { NextResponse } from "next/server";
 import { database } from "@/lib/server";
 import { contactSchema } from "@/lib/validation";
@@ -23,7 +24,8 @@ export async function POST(request: Request) {
       },
       { status: 503 },
     );
-  const { error } = await db.from("enquiries").insert(p.data);
+  const id=crypto.randomUUID();
+  const { error } = await db.from("enquiries").insert({...p.data,id,notify_email:true});
   if (error)
     return NextResponse.json(
       {
@@ -32,5 +34,7 @@ export async function POST(request: Request) {
       },
       { status: 503 },
     );
-  return NextResponse.json({ ok: true });
+  let notification={pending:true};
+  try { notification=await processContactEmails(id); } catch {}
+  return NextResponse.json({ ok: true, emailPending:notification.pending });
 }

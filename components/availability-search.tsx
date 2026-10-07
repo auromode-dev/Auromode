@@ -89,10 +89,10 @@ export function AvailabilitySearch() {
         <div className="picker-title"><span>{open === "guests" ? "Who is coming?" : open === "checkin" ? "Your arrival" : "Your departure"}</span><button type="button" onClick={close} aria-label="Close picker"><X size={17} /></button></div>
         {open === "guests" ? <div role="radiogroup" aria-label="Number of guests" onKeyDown={(event) => {
           if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
-            event.preventDefault(); const next = event.key === "Home" ? 1 : event.key === "End" ? 4 : Math.min(4, Math.max(1, guests + (event.key === "ArrowDown" ? 1 : -1)));
+            event.preventDefault(); const next = event.key === "Home" ? 1 : event.key === "End" ? 10 : Math.min(10, Math.max(1, guests + (event.key === "ArrowDown" ? 1 : -1)));
             setGuests(next); popup.current?.querySelector<HTMLButtonElement>(`[data-guests="${next}"]`)?.focus();
           }
-        }}>{[1,2,3,4].map((n) => <button type="button" role="radio" aria-checked={guests === n} tabIndex={guests === n ? 0 : -1} data-guests={n} key={n} onClick={() => { setGuests(n); close(); }}><span>{n} {n === 1 ? "guest" : "guests"}</span>{guests === n && <Check size={16} />}</button>)}</div> : <>
+        }}>{Array.from({length:10},(_,i)=>i+1).map((n) => <button type="button" role="radio" aria-checked={guests === n} tabIndex={guests === n ? 0 : -1} data-guests={n} key={n} onClick={() => { setGuests(n); close(); }}><span>{n} {n === 1 ? "guest" : "guests"}</span>{guests === n && <Check size={16} />}</button>)}</div> : <>
           <div className="calendar-month"><button type="button" aria-label="Previous month" disabled={month <= monthOf(minimum)} onClick={() => moveMonth(-1)}><ChevronLeft size={18} /></button><strong aria-live="polite">{new Intl.DateTimeFormat("en-GB", { month:"long", year:"numeric", timeZone:"UTC" }).format(new Date(month))}</strong><button type="button" aria-label="Next month" onClick={() => moveMonth(1)}><ChevronRight size={18} /></button></div>
           <div className="calendar-week" aria-hidden="true">{["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => <span key={d}>{d}</span>)}</div>
           <div className="calendar-days" role="group" aria-label="Dates" onKeyDown={(event) => {

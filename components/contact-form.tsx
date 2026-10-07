@@ -34,7 +34,7 @@ export function ContactForm() {
             );
           } else {
             setStatus(
-              "Thank you. Your enquiry has been received. Reception will be in touch.",
+              result.emailPending ? "Thank you. Your enquiry has been received. The acknowledgement email is pending; reception will be in touch." : "Thank you. Your enquiry has been received and an acknowledgement email has been requested. Reception will be in touch.",
             );
             setFallback("");
             form.reset();

@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     const quantity = Math.ceil(guests / roomCapacity[room]);
     if (
       quantity <= stay.adults &&
-      quantity <= 4 &&
+      quantity <= 10 &&
       (room !== stay.room || quantity !== stay.quantity)
     )
       candidates.push({

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { normalizeRoomCategory } from "@/lib/rooms";
+import { normalizeRoomCategory, roomCapacity } from "@/lib/rooms";
 
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -39,13 +39,26 @@ export function BookingForm() {
   const [stay, setStay] = useState({
     room: normalizeRoomCategory(
       query.get("room"),
-      Number(query.get("adults") || 2),
+      Number(query.get("adults") || (query.get("room") === "studio" ? 1 : 2)),
     ),
     checkin: query.get("checkin") || "",
     checkout: query.get("checkout") || "",
     adults: query.get("adults") || (query.get("room") === "studio" ? "1" : "2"),
     children: "0",
-    quantity: "1",
+    quantity: String(
+      Math.max(
+        1,
+        Math.ceil(
+          Number(query.get("adults") || (query.get("room") === "studio" ? 1 : 2)) /
+            roomCapacity[
+              normalizeRoomCategory(
+                query.get("room"),
+                Number(query.get("adults") || (query.get("room") === "studio" ? 1 : 2)),
+              )
+            ],
+        ),
+      ),
+    ),
   });
   const [step, setStep] = useState<"availability" | "details">("availability");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -310,9 +323,11 @@ export function BookingForm() {
                         value={stay.quantity}
                         onChange={(e) => update("quantity", e.target.value)}
                       >
-                        {[1, 2, 3, 4].map((n) => (
-                          <option key={n}>{n}</option>
-                        ))}
+                        {Array.from({ length: 10 }, (_, i) => i + 1).map(
+                          (n) => (
+                            <option key={n}>{n}</option>
+                          ),
+                        )}
                       </select>
                     </label>
                     <label className="field">
@@ -321,9 +336,11 @@ export function BookingForm() {
                         value={stay.adults}
                         onChange={(e) => update("adults", e.target.value)}
                       >
-                        {[1, 2, 3, 4].map((n) => (
-                          <option key={n}>{n}</option>
-                        ))}
+                        {Array.from({ length: 10 }, (_, i) => i + 1).map(
+                          (n) => (
+                            <option key={n}>{n}</option>
+                          ),
+                        )}
                       </select>
                     </label>
                     <label className="field">
@@ -513,6 +530,20 @@ export function BookingForm() {
               )}
             </>
           )}
+          {message && (
+            <div className={step === "availability" && availability && !hasRooms ? "notice availability-unavailable" : "notice"} role="status">
+              {done && <Check size={20} />}
+              <p
+                translate={
+                  done || /reference|payment received/i.test(message)
+                    ? "no"
+                    : undefined
+                }
+              >
+                {message}
+              </p>
+            </div>
+          )}
           {step === "availability" &&
             (findingSuggestions ||
               suggestionMessage ||
@@ -570,12 +601,7 @@ export function BookingForm() {
                 ))}
               </section>
             )}
-          {message && (
-            <div className="notice" role="status">
-              {done && <Check size={20} />}
-              <p translate={done || /reference|payment received/i.test(message) ? "no" : undefined}>{message}</p>
-            </div>
-          )}
+
         </div>
         <aside className="booking-aside">
           <Image width={900} height={600} src={room.image} alt={room.name} />

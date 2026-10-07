@@ -17,6 +17,8 @@ type Booking = {
   amount: number;
   status: string;
   payment_status: string;
+  booking_source?: string;
+  booking_reference?: string;
   room_id: string;
   group_id?: string | null;
   requests: string;
@@ -262,6 +264,12 @@ export function AdminDashboard() {
               {bookings.map((b) => (
                 <tr key={b.id}>
                   <td>
+                    {b.booking_reference && (
+                      <>
+                        <strong translate="no">{b.booking_reference}</strong>
+                        <br />
+                      </>
+                    )}
                     {b.first_name} {b.last_name}
                     <br />
                     {b.email}
@@ -288,12 +296,20 @@ export function AdminDashboard() {
                           Group: {b.group_id}
                         </span>
                         <br />
-                        Each row is one room in the shared payment.
+                        Each row is one room in the shared booking.
                       </details>
                     )}
                   </td>
                   <td>₹{(b.amount / 100).toLocaleString("en-IN")}</td>
-                  <td>{b.payment_status.replaceAll("_", " ")}</td>
+                  <td>
+                    {b.payment_status.replaceAll("_", " ")}
+                    {b.booking_source === "reception" && (
+                      <>
+                        <br />
+                        <small>Reception booking</small>
+                      </>
+                    )}
+                  </td>
                   <td>
                     <select
                       aria-label={"Booking status for " + b.first_name}

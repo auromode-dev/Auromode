@@ -1,5 +1,6 @@
 ﻿"use client";
 import { useEffect, useRef, useState } from "react";
+import { ReceptionBooking } from "@/components/reception-booking";
 import { Trash2 } from "lucide-react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { roomTypes } from "@/lib/content";
@@ -217,276 +218,282 @@ export function RoomManager({
           </tbody>
         </table>
       </div>
-      <form
-        key={version}
-        style={{ maxWidth: 760, marginTop: 35 }}
-        onSubmit={async (e) => {
-          e.preventDefault();
-          const form = e.currentTarget,
-            values = new FormData(form);
-          const uploaded: string[] = [];
-          let saved = false;
-          setBusy(true);
-          setMessage("");
-          try {
-            const access = await ensureAdminSession(db.auth);
-            if (!access.authorized)
-              throw new Error(access.error || "Please sign in again.");
-            const urls = Array.from(
-              new Set([
-                ...images,
-                ...String(values.get("image_urls") || "")
-                  .split(/\r?\n/)
-                  .map((s) => s.trim())
-                  .filter(Boolean),
-              ]),
-            );
-            const files = values
-              .getAll("images")
-              .filter((f): f is File => f instanceof File && f.size > 0);
-            if (urls.some((url) => !validRoomImageUrl(url)))
-              throw new Error("Use HTTPS image URLs, one per line.");
-            if (urls.length + files.length > MAX_ROOM_IMAGES)
-              throw new Error(
-                `Use at most ${MAX_ROOM_IMAGES} images per room.`,
+      {!editing && <ReceptionBooking db={db} refresh={refresh} />}
+      {editing && (
+        <form
+          key={version}
+          style={{ maxWidth: 760, marginTop: 35 }}
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const form = e.currentTarget,
+              values = new FormData(form);
+            const uploaded: string[] = [];
+            let saved = false;
+            setBusy(true);
+            setMessage("");
+            try {
+              const access = await ensureAdminSession(db.auth);
+              if (!access.authorized)
+                throw new Error(access.error || "Please sign in again.");
+              const urls = Array.from(
+                new Set([
+                  ...images,
+                  ...String(values.get("image_urls") || "")
+                    .split(/\r?\n/)
+                    .map((s) => s.trim())
+                    .filter(Boolean),
+                ]),
               );
-            if (
-              files.some(
-                (f) =>
-                  f.size > 5 * 1024 * 1024 ||
-                  !["image/jpeg", "image/png", "image/webp"].includes(f.type),
-              )
-            )
-              throw new Error(
-                "Choose JPEG, PNG or WebP files, each no larger than 5 MB.",
-              );
-            const number = Number(values.get("room_number")),
-              nonSeason = Math.round(
-                Number(values.get("non_season_rate")) * 100,
-              ),
-              season = Math.round(Number(values.get("season_rate")) * 100);
-            if (
-              !Number.isInteger(number) ||
-              number < 1 ||
-              ![nonSeason, season].every(
-                (n) => Number.isSafeInteger(n) && n > 0 && n <= 2147483647,
-              )
-            )
-              throw new Error("Enter a valid room number and positive prices.");
-            for (const file of files) {
-              const path = crypto.randomUUID() + "." + file.type.split("/")[1];
-              const { error } = await db.storage
-                .from("room-images")
-                .upload(path, file, { contentType: file.type });
-              if (error)
+              const files = values
+                .getAll("images")
+                .filter((f): f is File => f instanceof File && f.size > 0);
+              if (urls.some((url) => !validRoomImageUrl(url)))
+                throw new Error("Use HTTPS image URLs, one per line.");
+              if (urls.length + files.length > MAX_ROOM_IMAGES)
                 throw new Error(
-                  "Image upload failed. Check storage access and try again.",
+                  `Use at most ${MAX_ROOM_IMAGES} images per room.`,
                 );
-              uploaded.push(path);
-              urls.push(
-                db.storage.from("room-images").getPublicUrl(path).data
-                  .publicUrl,
+              if (
+                files.some(
+                  (f) =>
+                    f.size > 5 * 1024 * 1024 ||
+                    !["image/jpeg", "image/png", "image/webp"].includes(f.type),
+                )
+              )
+                throw new Error(
+                  "Choose JPEG, PNG or WebP files, each no larger than 5 MB.",
+                );
+              const number = Number(values.get("room_number")),
+                nonSeason = Math.round(
+                  Number(values.get("non_season_rate")) * 100,
+                ),
+                season = Math.round(Number(values.get("season_rate")) * 100);
+              if (
+                !Number.isInteger(number) ||
+                number < 1 ||
+                ![nonSeason, season].every(
+                  (n) => Number.isSafeInteger(n) && n > 0 && n <= 2147483647,
+                )
+              )
+                throw new Error(
+                  "Enter a valid room number and positive prices.",
+                );
+              for (const file of files) {
+                const path =
+                  crypto.randomUUID() + "." + file.type.split("/")[1];
+                const { error } = await db.storage
+                  .from("room-images")
+                  .upload(path, file, { contentType: file.type });
+                if (error)
+                  throw new Error(
+                    "Image upload failed. Check storage access and try again.",
+                  );
+                uploaded.push(path);
+                urls.push(
+                  db.storage.from("room-images").getPublicUrl(path).data
+                    .publicUrl,
+                );
+              }
+              if (!urls.length)
+                urls.push(roomTypes.find((r) => r.id === category)!.image);
+              const record = {
+                room_number: number,
+                name: String(values.get("name")).trim(),
+                category,
+                capacity: roomCapacity[category],
+                nightly_rate: nonSeason,
+                non_season_rate: nonSeason,
+                season_rate: season,
+                image_urls: urls,
+                image_url: urls[0],
+                active: values.get("active") === "on",
+                cancellation_terms: String(
+                  values.get("cancellation_terms"),
+                ).trim(),
+              };
+              const result = editing
+                ? await db
+                    .from("rooms")
+                    .update(record)
+                    .eq("id", editing.id)
+                    .select("id")
+                : await db.from("rooms").insert(record).select("id");
+              if (result.error)
+                throw new Error(
+                  result.error.code === "23505"
+                    ? "This room number already exists."
+                    : ["PGRST204", "42703"].includes(result.error.code)
+                      ? "Apply supabase/migrations/20260929_room_inventory.sql in the Supabase SQL Editor first."
+                      : roomSaveError(result.error.code),
+                );
+              if (!result.data?.length)
+                throw new Error(
+                  "Room was not saved. Refresh and check admin access.",
+                );
+              saved = true;
+              reset();
+              setMessage("Room saved.");
+              await refresh();
+            } catch (error) {
+              setMessage(
+                error instanceof Error ? error.message : "Could not save room.",
               );
+            } finally {
+              if (!saved && uploaded.length)
+                await db.storage.from("room-images").remove(uploaded);
+              setBusy(false);
             }
-            if (!urls.length)
-              urls.push(roomTypes.find((r) => r.id === category)!.image);
-            const record = {
-              room_number: number,
-              name: String(values.get("name")).trim(),
-              category,
-              capacity: roomCapacity[category],
-              nightly_rate: nonSeason,
-              non_season_rate: nonSeason,
-              season_rate: season,
-              image_urls: urls,
-              image_url: urls[0],
-              active: values.get("active") === "on",
-              cancellation_terms: String(
-                values.get("cancellation_terms"),
-              ).trim(),
-            };
-            const result = editing
-              ? await db
-                  .from("rooms")
-                  .update(record)
-                  .eq("id", editing.id)
-                  .select("id")
-              : await db.from("rooms").insert(record).select("id");
-            if (result.error)
-              throw new Error(
-                result.error.code === "23505"
-                  ? "This room number already exists."
-                  : ["PGRST204", "42703"].includes(result.error.code)
-                    ? "Apply supabase/migrations/20260929_room_inventory.sql in the Supabase SQL Editor first."
-                    : roomSaveError(result.error.code),
-              );
-            if (!result.data?.length)
-              throw new Error(
-                "Room was not saved. Refresh and check admin access.",
-              );
-            saved = true;
-            reset();
-            setMessage("Room saved.");
-            await refresh();
-          } catch (error) {
-            setMessage(
-              error instanceof Error ? error.message : "Could not save room.",
-            );
-          } finally {
-            if (!saved && uploaded.length)
-              await db.storage.from("room-images").remove(uploaded);
-            setBusy(false);
-          }
-        }}
-      >
-        <h2>{editing ? "Edit room" : "Add a physical room"}</h2>
-        <div className="field-grid">
-          <label className="field">
-            Room number
-            <input
-              name="room_number"
-              type="number"
-              min="1"
-              step="1"
-              required
-              defaultValue={editing?.room_number ?? undefined}
-            />
-          </label>
-          <label className="field">
-            Room name / number
-            <input
-              name="name"
-              required
-              maxLength={100}
-              defaultValue={editing?.name}
-            />
-          </label>
-          <label className="field">
-            Category
-            <select
-              name="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value as RoomCategory)}
-            >
-              {roomTypes.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.name} - {r.beds} bed(s)
-                </option>
-              ))}
-            </select>
-          </label>
-          <p>
-            {roomCapacity[category]} bed(s); maximum {roomCapacity[category]}{" "}
-            guest(s), including children.
-          </p>
-          <label className="field">
-            Non-season nightly rate (INR)
-            <input
-              name="non_season_rate"
-              type="number"
-              min="1"
-              step="0.01"
-              required
-              defaultValue={
-                editing
-                  ? (editing.non_season_rate ?? editing.nightly_rate) / 100
-                  : undefined
-              }
-            />
-          </label>
-          <label className="field">
-            Season nightly rate (INR)
-            <input
-              name="season_rate"
-              type="number"
-              min="1"
-              step="0.01"
-              required
-              defaultValue={
-                editing
-                  ? (editing.season_rate ?? editing.nightly_rate) / 100
-                  : undefined
-              }
-            />
-          </label>
-          <label className="field full-width">
-            Upload room images (up to 12 total, 5 MB each)
-            <input
-              name="images"
-              type="file"
-              multiple
-              accept="image/jpeg,image/png,image/webp"
-            />
-          </label>
-          <label className="field full-width">
-            Add image URLs (one per line)
-            <textarea name="image_urls" placeholder="https://..." />
-          </label>
-        </div>
-        {images.length > 0 && (
-          <>
+          }}
+        >
+          <h2>Edit room</h2>
+          <div className="field-grid">
+            <label className="field">
+              Room number
+              <input
+                name="room_number"
+                type="number"
+                min="1"
+                step="1"
+                required
+                defaultValue={editing?.room_number ?? undefined}
+              />
+            </label>
+            <label className="field">
+              Room name / number
+              <input
+                name="name"
+                required
+                maxLength={100}
+                defaultValue={editing?.name}
+              />
+            </label>
+            <label className="field">
+              Category
+              <select
+                name="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value as RoomCategory)}
+              >
+                {roomTypes.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name} - {r.beds} bed(s)
+                  </option>
+                ))}
+              </select>
+            </label>
             <p>
-              The first image is the cover. Remove images or move a photo to the
-              front.
+              {roomCapacity[category]} bed(s); maximum {roomCapacity[category]}{" "}
+              guest(s), including children.
             </p>
-            <div className="admin-image-grid">
-              {images.map((url, i) => (
-                <div key={url}>
-                  <img src={url} alt={`Room photo ${i + 1}`} />
-                  <button
-                    type="button"
-                    disabled={busy || i === 0}
-                    onClick={() =>
-                      setImages([url, ...images.filter((x) => x !== url)])
-                    }
-                  >
-                    {i === 0 ? "Cover" : "Make cover"}
-                  </button>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => setImages(images.filter((x) => x !== url))}
-                  >
-                    Remove photo {i + 1}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-        <label className="field">
-          Cancellation terms
-          <textarea
-            name="cancellation_terms"
-            required
-            defaultValue={
-              editing?.cancellation_terms ||
-              "Contact reception for cancellation terms before paying."
-            }
-          />
-        </label>
-        <label style={{ display: "block", marginBottom: 20 }}>
-          <input
-            name="active"
-            type="checkbox"
-            defaultChecked={editing?.active ?? true}
-          />{" "}
-          Open for bookings
-        </label>
-        <button className="button" disabled={busy}>
-          {busy ? "Saving..." : "Save room"}
-        </button>
-        {editing && (
-          <button
-            className="button button-outline"
-            type="button"
-            disabled={busy}
-            onClick={reset}
-          >
-            Cancel edit
+            <label className="field">
+              Non-season nightly rate (INR)
+              <input
+                name="non_season_rate"
+                type="number"
+                min="1"
+                step="0.01"
+                required
+                defaultValue={
+                  editing
+                    ? (editing.non_season_rate ?? editing.nightly_rate) / 100
+                    : undefined
+                }
+              />
+            </label>
+            <label className="field">
+              Season nightly rate (INR)
+              <input
+                name="season_rate"
+                type="number"
+                min="1"
+                step="0.01"
+                required
+                defaultValue={
+                  editing
+                    ? (editing.season_rate ?? editing.nightly_rate) / 100
+                    : undefined
+                }
+              />
+            </label>
+            <label className="field full-width">
+              Upload room images (up to 12 total, 5 MB each)
+              <input
+                name="images"
+                type="file"
+                multiple
+                accept="image/jpeg,image/png,image/webp"
+              />
+            </label>
+            <label className="field full-width">
+              Add image URLs (one per line)
+              <textarea name="image_urls" placeholder="https://..." />
+            </label>
+          </div>
+          {images.length > 0 && (
+            <>
+              <p>
+                The first image is the cover. Remove images or move a photo to
+                the front.
+              </p>
+              <div className="admin-image-grid">
+                {images.map((url, i) => (
+                  <div key={url}>
+                    <img src={url} alt={`Room photo ${i + 1}`} />
+                    <button
+                      type="button"
+                      disabled={busy || i === 0}
+                      onClick={() =>
+                        setImages([url, ...images.filter((x) => x !== url)])
+                      }
+                    >
+                      {i === 0 ? "Cover" : "Make cover"}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => setImages(images.filter((x) => x !== url))}
+                    >
+                      Remove photo {i + 1}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          <label className="field">
+            Cancellation terms
+            <textarea
+              name="cancellation_terms"
+              required
+              defaultValue={
+                editing?.cancellation_terms ||
+                "Contact reception for cancellation terms before paying."
+              }
+            />
+          </label>
+          <label style={{ display: "block", marginBottom: 20 }}>
+            <input
+              name="active"
+              type="checkbox"
+              defaultChecked={editing?.active ?? true}
+            />{" "}
+            Open for bookings
+          </label>
+          <button className="button" disabled={busy}>
+            {busy ? "Saving..." : "Save room"}
           </button>
-        )}
-      </form>
+          {editing && (
+            <button
+              className="button button-outline"
+              type="button"
+              disabled={busy}
+              onClick={reset}
+            >
+              Cancel edit
+            </button>
+          )}
+        </form>
+      )}
     </section>
   );
 }

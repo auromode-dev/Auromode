@@ -55,8 +55,8 @@ const community: { name: string; href?: string }[] = [
   },
   { name: "Delicious Bites", href: "https://www.delicious-bites.com/" },
   { name: "Sarvam Computers", href: "https://sarvam-computers.business.site/" },
-  { name: "To Be Two", href: "https://www.tobetwo.in/" },
   { name: "Auromode Restaurant", href: "/amenities/tanto" },
+  { name: "To Be Two Showroom", href: "https://www.tobetwo.in/" },
   { name: "Hibiscus Heroes", href: "http://www.hibiscusheroes.com/" },
   {
     name: "Avitra International Translators",

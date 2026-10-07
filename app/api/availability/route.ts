@@ -27,11 +27,20 @@ export async function POST(request: Request) {
     p_category: parsed.data.room,
     p_checkin: parsed.data.checkin,
     p_checkout: parsed.data.checkout,
-    p_guests: Math.ceil((parsed.data.adults + parsed.data.children) / parsed.data.quantity),
+    p_guests: Math.ceil(
+      (parsed.data.adults + parsed.data.children) / parsed.data.quantity,
+    ),
   });
   if (error)
     return NextResponse.json(
-      { error: "We could not check availability. Please try again shortly." },
+      {
+        error:
+          error.code === "PGRST202"
+            ? "The availability function is missing from the database. Reception must check the database migrations."
+            : error.code === "42501"
+              ? "The availability service does not have database access. Reception must check the server database configuration."
+              : "We could not connect to room availability. Please try again shortly or contact reception.",
+      },
       { status: 503 },
     );
   return NextResponse.json(

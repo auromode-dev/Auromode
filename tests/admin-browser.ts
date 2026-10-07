@@ -40,7 +40,8 @@ async function main() {
   const browser = await chromium.launch({ channel: "msedge", headless: true });
   try {
     const page = await browser.newPage();
-    let fixture: Record<string, unknown>[] = [];
+    const initialRoom = { id: "test-room", name: "Session regression test", room_number: 99, category: "twin", capacity: 2, nightly_rate: 100000, non_season_rate: 100000, season_rate: 150000, active: true, image_url: "/images/twin.jpg", image_urls: ["/images/twin.jpg"], cancellation_terms: "Test only" };
+    let fixture: Record<string, unknown>[] = [{...initialRoom}];
     let deleted = 0,
       blockDelete = false;
     let refreshed = 0,
@@ -81,6 +82,8 @@ async function main() {
           : route.fulfill({ status: 201, json: [{ id: "test-room" }] });
       }
       if (url.pathname === "/rest/v1/rooms" && request.method() === "PATCH") {
+        saved++;
+        if (deny) return route.fulfill({status:403,json:{code:"42501",message:"Denied"}});
         fixture = [{ ...fixture[0], ...request.postDataJSON() }];
         return route.fulfill({ status: 200, json: [{ id: "test-room" }] });
       }
@@ -102,6 +105,7 @@ async function main() {
     });
     await page.goto("http://localhost:3000/admin");
     await page.getByRole("button", { name: "Rooms", exact: true }).click();
+    await page.getByRole("button", {name:"Edit Session regression test",exact:true}).click();
     await page.getByLabel("Room name / number").fill("Session regression test");
     await page.getByLabel("Room number", { exact: true }).fill("99");
     await page.getByLabel("Non-season nightly rate (INR)").fill("1000");
@@ -114,7 +118,7 @@ async function main() {
     assert.equal(saved, 1);
     assert.equal(refreshed, 1);
     console.log(
-      "PASS stale token refreshed before room POST; no live room was created",
+      "PASS stale token refreshed before room PATCH; no live room was changed",
     );
     assert.equal(fixture[0].non_season_rate, 100000);
     assert.equal(fixture[0].season_rate, 150000);
@@ -200,6 +204,10 @@ async function main() {
     console.log(
       "PASS multiple images, cover selection, gallery removal, protected deletion and successful deletion",
     );
+    fixture = [{...initialRoom}];
+    await page.reload();
+    await page.getByRole("button", {name:"Rooms",exact:true}).click();
+    await page.getByRole("button", {name:"Edit Session regression test",exact:true}).click();
     deny = true;
     await page.getByLabel("Room name / number").fill("Denied test");
     await page.getByLabel("Room number", { exact: true }).fill("99");

@@ -64,8 +64,7 @@ export default async function Guesthouse() {
               <div className="room-body">
                 <div className="room-meta">
                   <span>
-                    <Users size={14} /> {room.beds} bed
-                    {room.beds === 1 ? "" : "s"}
+                    <Users size={14} /> {`${room.beds} ${room.beds === 1 ? "bed" : "beds"}`}
                   </span>
                   <span>
                     <Wifi size={14} /> WiFi

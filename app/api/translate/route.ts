@@ -1,8 +1,6 @@
 ﻿import { NextResponse } from "next/server";
 import { isLanguage } from "@/lib/languages";
-const cache = new Map<string, { text: string; expires: number }>();
-const limits = new Map<string, { count: number; until: number }>();
-let allowance = { day: "", characters: 0 };
+import { loadDictionary, translateStored } from "@/lib/stored-translations";
 export async function POST(request: Request) {
   const origin = request.headers.get("origin");
   if (origin && origin !== new URL(request.url).origin)
@@ -32,91 +30,13 @@ export async function POST(request: Request) {
     );
   if (body.language === "en")
     return NextResponse.json({ translations: body.texts });
-  const key = process.env.AZURE_TRANSLATOR_KEY;
-  if (!key)
-    return NextResponse.json(
-      { error: "Translation is not available yet. Showing English." },
-      { status: 503 },
-    );
-  const now = Date.now();
-  for (const [id, limit] of limits) if (limit.until < now) limits.delete(id);
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "local";
-  const limit = limits.get(ip) || { count: 0, until: now + 60000 };
-  if (limit.count >= 40 || limits.size > 5000)
-    return NextResponse.json(
-      { error: "Please wait a minute before translating again." },
-      { status: 429 },
-    );
-  limit.count++;
-  limits.set(ip, limit);
-  const texts = body.texts as string[],
-    language = body.language;
-  const cacheKey = (text: string) => language + "\0" + text;
-  const missing = [...new Set(texts)].filter((text) => {
-    const entry = cache.get(cacheKey(text));
-    return !entry || entry.expires < now;
-  });
-  if (missing.length) {
-    const day = new Date().toISOString().slice(0, 10);
-    if (allowance.day !== day) allowance = { day, characters: 0 };
-    const size = missing.join("").length;
-    if (allowance.characters + size > 200000)
-      return NextResponse.json(
-        { error: "Translation limit reached. Showing English." },
-        { status: 429 },
-      );
-    allowance.characters += size;
-    try {
-      const response = await fetch(
-        "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=" +
-          encodeURIComponent(language),
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Ocp-Apim-Subscription-Key": key,
-            ...(process.env.AZURE_TRANSLATOR_REGION
-              ? {
-                  "Ocp-Apim-Subscription-Region":
-                    process.env.AZURE_TRANSLATOR_REGION,
-                }
-              : {}),
-          },
-          body: JSON.stringify(missing.map((Text) => ({ Text }))),
-          signal: AbortSignal.timeout(15000),
-          cache: "no-store",
-        },
-      );
-      if (!response.ok) throw new Error("Provider unavailable");
-      const data = await response.json();
-      if (
-        !Array.isArray(data) ||
-        data.length !== missing.length ||
-        data.some((item) => typeof item.translations?.[0]?.text !== "string")
-      )
-        throw new Error("Invalid provider response");
-      missing.forEach((text, i) =>
-        cache.set(cacheKey(text), {
-          text: data[i].translations[0].text,
-          expires: now + 86400000,
-        }),
-      );
-      const translations = texts.map((text) => cache.get(cacheKey(text))!.text);
-      while (cache.size > 12000) cache.delete(cache.keys().next().value!);
-      return NextResponse.json(
-        { translations },
-        { headers: { "Cache-Control": "no-store" } },
-      );
-    } catch {
-      return NextResponse.json(
-        { error: "Translation is temporarily unavailable. Showing English." },
-        { status: 503 },
-      );
-    }
-  }
+  const dictionary = await loadDictionary(body.language);
   return NextResponse.json(
-    { translations: texts.map((text) => cache.get(cacheKey(text))!.text) },
+    {
+      translations: body.texts.map((text: string) =>
+        translateStored(text, dictionary),
+      ),
+    },
     { headers: { "Cache-Control": "no-store" } },
   );
 }

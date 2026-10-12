@@ -312,7 +312,7 @@ export function BookingForm() {
                       >
                         {roomTypes.map((r) => (
                           <option value={r.id} key={r.id}>
-                            {r.name} · up to {r.capacity} guests
+                            {`${r.name} · up to ${r.capacity} ${r.capacity === 1 ? "guest" : "guests"}`}
                           </option>
                         ))}
                       </select>
@@ -386,11 +386,7 @@ export function BookingForm() {
                       for your dates.
                     </strong>
                     <p>
-                      From ₹{(nightlyRate / 100).toLocaleString("en-IN")} per
-                      night · ₹
-                      {((nightlyRate * length) / 100).toLocaleString("en-IN")}{" "}
-                      total for {length} night{length === 1 ? "" : "s"},
-                      including taxes.
+                      {`From ₹${(nightlyRate / 100).toLocaleString("en-IN")} per night · ₹${((nightlyRate * length) / 100).toLocaleString("en-IN")} total for ${length} ${length === 1 ? "night" : "nights"}, including taxes.`}
                     </p>
                     <p>
                       Availability is checked live. Your room is reserved only
@@ -399,8 +395,7 @@ export function BookingForm() {
                   </div>
                   <p className="notice">
                     <strong>
-                      {quantity} room(s) for{" "}
-                      {Number(stay.adults) + Number(stay.children)} guests
+                      {`${quantity} room(s) for ${Number(stay.adults) + Number(stay.children)} guests`}
                     </strong>
                     <br />
                     Cancellation terms:{" "}
@@ -572,12 +567,7 @@ export function BookingForm() {
                       : {option.checkin} to {option.checkout}
                     </p>
                     <p>
-                      For all {Number(stay.adults) + Number(stay.children)}{" "}
-                      guests. INR{" "}
-                      {((option.nightly_rate * length) / 100).toLocaleString(
-                        "en-IN",
-                      )}{" "}
-                      total for {length} nights, including taxes.
+                      {`For all ${Number(stay.adults) + Number(stay.children)} guests. INR ${((option.nightly_rate * length) / 100).toLocaleString("en-IN")} total for ${length} ${length === 1 ? "night" : "nights"}, including taxes.`}
                     </p>
                     <button
                       type="button"
@@ -612,7 +602,7 @@ export function BookingForm() {
             {length > 0 && (
               <p>
                 <strong>
-                  {length} night{length !== 1 ? "s" : ""}
+                  {`${length} ${length === 1 ? "night" : "nights"}`}
                 </strong>{" "}
                 · {Number(stay.adults) + Number(stay.children)} guest(s)
               </p>

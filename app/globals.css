@@ -2033,3 +2033,15 @@ h2 {font-size:clamp(30px,3.2vw,46px);letter-spacing:-1.6px;line-height:1.2}
 
 /* Requested bold heading treatment, including emphasized heading words. */
 h1,h2,h3,h4,h5,h6,h1 em,h2 em,h3 em,h4 em,h5 em,h6 em {font-weight:700 !important}
+
+/* Stored translations can be longer than English; preserve readable text at narrow widths. */
+html:not([lang="en"]) :is(h1, h2, h3) {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 800px) {
+  html:not([lang="en"]) .hero {
+    height: auto;
+    min-height: 555px;
+    max-height: none;
+  }
+}

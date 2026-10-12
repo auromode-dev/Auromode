@@ -1,10 +1,11 @@
 ﻿"use client";
 import { useEffect } from "react";
 import type { LanguageCode } from "@/lib/languages";
+import { loadDictionary, translateStored } from "@/lib/stored-translations";
 const excluded =
-  'script,style,noscript,textarea,code,pre,[translate="no"],[data-private], [contenteditable="true"]';
+  'script,style,noscript,title,textarea,code,pre,[translate="no"],[data-private], [contenteditable="true"]';
 const normalize = (text: string) => text.replace(/\s+/g, " ").trim();
-// Translate display text only. Form values, URLs, contact details and reservation IDs are never sent.
+// Translate display text locally. Form values, private content and reservation IDs stay untouched.
 const eligible = (text: string) =>
   !!text &&
   text.length <= 3000 &&
@@ -31,7 +32,7 @@ export function PublicTranslation({
       running = false,
       dirty = false;
     let timer: ReturnType<typeof setTimeout>;
-    const controller = new AbortController();
+    const dictionary = loadDictionary(language);
     const nodes = new Map<Text, Entry>();
     const attributes = new Map<Element, Map<string, Entry>>();
     const cache = new Map<string, string>();
@@ -82,7 +83,7 @@ export function PublicTranslation({
       for (const el of document.body.querySelectorAll(
         "[placeholder],[aria-label],[alt],[title]",
       )) {
-        if (el.closest(excluded)) continue;
+        if (el.closest(excluded.replace("textarea,", ""))) continue;
         for (const attr of ["placeholder", "aria-label", "alt", "title"]) {
           const current = el.getAttribute(attr);
           if (!current) continue;
@@ -115,36 +116,10 @@ export function PublicTranslation({
       );
       if (missing.length) onBusy(true);
       try {
-        while (missing.length) {
-          const batch: string[] = [];
-          let count = 0;
-          while (
-            missing.length &&
-            batch.length < 100 &&
-            count + missing[0].length <= 10000
-          ) {
-            const text = missing.shift()!;
-            batch.push(text);
-            count += text.length;
-          }
-          const response = await fetch("/api/translate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ language, texts: batch }),
-            signal: controller.signal,
-          });
-          const result = await response.json();
-          if (!response.ok)
-            throw new Error(
-              result.error || "Translation unavailable. Showing English.",
-            );
-          if (
-            !Array.isArray(result.translations) ||
-            result.translations.length !== batch.length
-          )
-            throw new Error("Translation unavailable. Showing English.");
-          batch.forEach((text, i) => cache.set(text, result.translations[i]));
-        }
+        const stored = await dictionary;
+        missing.forEach((text) =>
+          cache.set(text, translateStored(text, stored)),
+        );
         if (disposed) return;
         observer.disconnect();
         targets.forEach((t) => {
@@ -193,7 +168,6 @@ export function PublicTranslation({
     void translate();
     return () => {
       disposed = true;
-      controller.abort();
       clearTimeout(timer);
       observer.disconnect();
       restore();

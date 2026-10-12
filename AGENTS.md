@@ -20,7 +20,7 @@ Read the relevant implementation before changing it. Use `README.md` for setup, 
 - `lib/server.ts`: server-side database/provider access. `lib/supabase-browser.ts`: browser client protected by Supabase RLS.
 - `supabase/schema.sql`: fresh-project bootstrap. `supabase/migrations/`: incremental changes for existing projects.
 - `app/api/notifications/route.ts`: email/WhatsApp queue worker.
-- `lib/languages.ts`, `components/language-picker.tsx`, `components/public-translation.tsx`, `app/api/translate/route.ts`: active translation implementation. `lib/locales.ts` is historical welcome-page copy, not the active full-site translator.
+- `lib/languages.ts`, `components/language-picker.tsx`, `components/public-translation.tsx`, `lib/stored-translations.ts`, `lib/translations/*.json`: active stored translation implementation. The bounded `app/api/translate/route.ts` is a compatibility endpoint with no external provider. `lib/locales.ts` is historical welcome-page copy, not the active full-site translator.
 
 ## Product and visual conventions
 
@@ -52,8 +52,8 @@ Read the relevant implementation before changing it. Use `README.md` for setup, 
 - A Supabase service-role API key does not provide SQL DDL access. When direct database access is unavailable, finish and verify the migration, then give the user the exact SQL Editor step. Report prepared versus applied migrations accurately.
 - Use local fixtures, PGlite and mocked providers for tests. Do not create live bookings, send notifications, charge/refund payments or deploy merely to test a change. Perform external writes only within the user's authorized scope.
 - Notifications require a scheduler calling the authenticated worker. Inspect current event routing before promising which recipients receive an event. Guest WhatsApp messages require opt-in. The current worker sends email before WhatsApp, so email failures can delay WhatsApp. API acceptance is not proof of delivery.
-- Keep translation credentials server-side. Preserve English fallback, request bounds and caching. Never translate form values, private output, admin data or booking references; use `translate="no"` or `data-private` for sensitive output.
-- Public translation is a runtime display feature, not multilingual SEO. Per-process caches/rate limits are not distributed guarantees. Third-party payment windows and transactional messages have separate language behavior.
+- Public translation needs no credentials: load the selected local dictionary. Update all nine dictionaries with public copy changes, preserve numeric placeholders and English fallback for unknown content. Never send page text to a translation provider. Preserve request bounds on the compatibility endpoint. Never translate form values, private output, admin data or booking references; use `translate="no"` or `data-private` for sensitive output.
+- Public translation is a runtime display feature, not multilingual SEO. New inventory text and booking terms need explicit stored translations; do not guess them. Third-party payment windows and transactional messages have separate language behavior.
 
 ## Development and verification
 

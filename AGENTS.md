@@ -12,8 +12,10 @@ Read the relevant implementation before changing it. Use `README.md` for setup, 
 - `app/`: public pages and server API routes. Prefer server components; add `"use client"` only for browser state or interaction, as the first statement.
 - `components/site-shell.tsx`, `app/globals.css`: shared navigation, sticky header, footer and visual styles.
 - `lib/content.ts`, `lib/rooms.ts`: public content, room categories, capacities and image helpers.
+- `lib/room-photos.ts`: supplied category photos in `public/stay/`, used for Stay page covers and the gallery below the booking form. Keep gallery selection in sync with the selected room category.
 - `components/office-rentals.tsx`, `app/amenities/offices/page.tsx`: office facilities, rental contacts and campus businesses. Keep the office details on their dedicated page; the Amenities card links there.
 - `components/availability-search.tsx`, `components/booking-form.tsx`: home search and booking steps.
+- `components/food-menu.tsx`: floating restaurant menu dialog on `/book`, using supplied images in `public/stay/menu/`. Keep keyboard dismissal, focus return, mobile zoom and local translations for the controls.
 - `app/api/availability/`, `app/api/bookings/`, `lib/validation.ts`: availability, alternatives and server-side reservation validation.
 - `lib/payment.ts`, `app/api/payments/`: Razorpay verification and captured-payment reconciliation.
 - `components/admin-dashboard.tsx`, `components/room-manager.tsx`, `lib/admin-session.ts`: reception access, bookings and physical-room management.
@@ -51,7 +53,7 @@ Read the relevant implementation before changing it. Use `README.md` for setup, 
 - Write a dated migration for schema changes and keep the fresh bootstrap consistent. Preserve IDs and foreign keys. Never rerun the bootstrap against an existing database or rerun an inventory import casually: imports may overwrite later prices.
 - A Supabase service-role API key does not provide SQL DDL access. When direct database access is unavailable, finish and verify the migration, then give the user the exact SQL Editor step. Report prepared versus applied migrations accurately.
 - Use local fixtures, PGlite and mocked providers for tests. Do not create live bookings, send notifications, charge/refund payments or deploy merely to test a change. Perform external writes only within the user's authorized scope.
-- Notifications require a scheduler calling the authenticated worker. Inspect current event routing before promising which recipients receive an event. Guest WhatsApp messages require opt-in. The current worker sends email before WhatsApp, so email failures can delay WhatsApp. API acceptance is not proof of delivery.
+- Notifications require a scheduler calling the authenticated worker. Inspect current event routing before promising which recipients receive an event. WhatsApp confirmation events notify reception and opted-in guests when configured. Guest WhatsApp messages require opt-in. The current worker sends email before WhatsApp, so email failures can delay WhatsApp. API acceptance is not proof of delivery.
 - Public translation needs no credentials: load the selected local dictionary. Update all nine dictionaries with public copy changes, preserve numeric placeholders and English fallback for unknown content. Never send page text to a translation provider. Preserve request bounds on the compatibility endpoint. Never translate form values, private output, admin data or booking references; use `translate="no"` or `data-private` for sensitive output.
 - Public translation is a runtime display feature, not multilingual SEO. New inventory text and booking terms need explicit stored translations; do not guess them. Third-party payment windows and transactional messages have separate language behavior.
 

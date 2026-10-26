@@ -469,5 +469,15 @@
   "Twin Room · up to 2 guests": "दो बिस्तरों वाला कमरा · अधिकतम 2 अतिथि",
   "Triple Room · up to 3 guests": "तीन बिस्तरों वाला कमरा · अधिकतम 3 अतिथि",
   "Family Suite · up to 4 guests": "पारिवारिक सुइट · अधिकतम 4 अतिथि",
-  "For all {guests} guests. INR {total} total for 1 night, including taxes.": "कुल {guests} अतिथियों के लिए। 1 रात का कुल INR {total}, कर सहित।"
+  "For all {guests} guests. INR {total} total for 1 night, including taxes.": "कुल {guests} अतिथियों के लिए। 1 रात का कुल INR {total}, कर सहित।",
+  "Tree-shaded courtyard at Auromode": "ऑरोमोड में पेड़ों की छाया वाला आँगन",
+  "Auromode sign on a terracotta wall": "टेराकोटा रंग की दीवार पर ऑरोमोड का नाम",
+  "Birdhouse among palms in the Auromode garden": "ऑरोमोड के बगीचे में ताड़ के पेड़ों के बीच पक्षियों का घर",
+  "Room gallery": "कमरे की तस्वीरें",
+  "Auromode - photo {number}": "ऑरोमोड - तस्वीर {number}",
+  "Show photo {number} of Auromode": "ऑरोमोड की तस्वीर {number} दिखाएँ",
+  "Food menu": "भोजन मेनू",
+  "Zoom in": "बड़ा करें",
+  "Zoom out": "छोटा करें",
+  "Menu page {number}": "मेनू पृष्ठ {number}"
 }

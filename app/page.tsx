@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { AvailabilitySearch } from "@/components/availability-search";
 import { Reveal } from "@/components/reveal";
-import { experiences, photos } from "@/lib/content";
+import { experiences } from "@/lib/content";
 export const metadata = {
   alternates: { canonical: "/", languages: { en: "/", fr: "/fr", ta: "/ta" } },
 };
@@ -121,8 +121,8 @@ export default function Home() {
         <Reveal className="intro-images">
           <img
             className="intro-main"
-            src={photos.garden}
-            alt="Quiet retreat surrounded by tropical greenery"
+            src="/auromode.webp"
+            alt="Auromode sign on a terracotta wall"
             loading="lazy"
           />
           <div className="story-stamp">
@@ -171,8 +171,8 @@ export default function Home() {
       <section className="explore-preview section">
         <Reveal className="explore-photo">
           <img
-            src={photos.auroville}
-            alt="Sunlight falling across a lush landscape in southern India"
+            src="/image01.webp"
+            alt="Birdhouse among palms in the Auromode garden"
             loading="lazy"
           />
           <span className="photo-label">

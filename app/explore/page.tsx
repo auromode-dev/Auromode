@@ -1,5 +1,4 @@
 ﻿import { PageHero } from "@/components/page-hero";
-import { photos } from "@/lib/content";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 export const metadata = {
@@ -13,7 +12,7 @@ export default function Explore() {
         eyebrow="CURIOSITY LOOKS GOOD ON YOU"
         title="Take the path less hurried."
         text="Find your own rhythm in Auroville. Leave a little space for the unexpected."
-        image={photos.auroville}
+        image="/explore.webp"
       />
       <section className="section">
         <div className="section-heading">

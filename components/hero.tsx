@@ -9,17 +9,16 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { photos } from "@/lib/content";
 const slides = [
   {
-    image: photos.hero,
-    alt: "Auromode guesthouse surrounded by trees in Auroville",
-  },
-  {
-    image: photos.garden,
+    image: "/slide01.webp",
     alt: "The tree-shaded entrance to the Auromode campus",
   },
-  { image: photos.room, alt: "A restful room filled with natural light" },
+  {
+    image: "/slide02.webp",
+    alt: "The tree-shaded entrance to the Auromode campus",
+  },
+  { image: "/slide03.webp", alt: "Tree-shaded courtyard at Auromode" },
 ];
 export function Hero() {
   const reduce = useReducedMotion();

@@ -1,6 +1,6 @@
 ﻿import { PageHero } from "@/components/page-hero";
-import { photos } from "@/lib/content";
 import { Leaf, Heart, Sun, Globe } from "lucide-react";
+import { RoomGallery } from "@/components/room-gallery";
 export const metadata = {
   title: "Our Story",
   alternates: { canonical: "/about" },
@@ -12,7 +12,7 @@ export default function About() {
         eyebrow="ROOTED IN AUROVILLE, SINCE 1975"
         title="A place with a past. A community with a future."
         text="Our story is one of transformation, connection, and the simple joy of welcoming people."
-        image={photos.garden}
+        image="/about/hero.webp"
       />
       <section className="section two-column prose">
         <div>
@@ -108,6 +108,22 @@ export default function About() {
             })}
           </div>
         </div>
+      </section>
+      <section className="section about-photo-gallery" aria-labelledby="about-gallery-title">
+        <div className="section-heading">
+          <h2 id="about-gallery-title">Life on campus</h2>
+        </div>
+        <RoomGallery
+          name="Auromode"
+          images={[
+            "/about/DSC01417.webp",
+            "/about/reception.webp",
+            "/about/garden.webp",
+            "/about/clean.webp",
+            "/about/parking.webp",
+            "/about/solar.webp",
+          ]}
+        />
       </section>
     </>
   );

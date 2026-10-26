@@ -43,7 +43,7 @@ async function main() {
   await page.screenshot({ path: "artifacts/home-desktop.png", fullPage: true });
   await page.getByRole("button", { name: "Next photo" }).click();
   assert.ok(
-    (await page.locator(".hero-image").getAttribute("src"))?.includes("garden"),
+    (await page.locator(".hero-image").getAttribute("src")) === "/slide02.webp",
   );
   await page.getByRole("button", { name: "Previous photo" }).click();
   console.log("PASS hero carousel");

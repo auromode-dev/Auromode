@@ -1,11 +1,12 @@
 import { RoomGallery } from "@/components/room-gallery";
-import { roomImages } from "@/lib/rooms";
+import { roomPhotos } from "@/lib/room-photos";
+import type { RoomCategory } from "@/lib/rooms";
 import { database } from "@/lib/server";
 import Link from "next/link";
 import { Users, Wifi, ArrowUpRight } from "lucide-react";
 import { PageHero } from "@/components/page-hero";
 import { AvailabilitySearch } from "@/components/availability-search";
-import { photos, roomTypes } from "@/lib/content";
+import { roomTypes } from "@/lib/content";
 export const metadata = {
   title: "Guesthouse & Rooms",
   alternates: { canonical: "/guesthouse" },
@@ -17,7 +18,7 @@ export default async function Guesthouse() {
     ? (
         await db
           .from("rooms")
-          .select("category,nightly_rate,image_url,image_urls")
+          .select("category,nightly_rate")
           .eq("active", true)
           .order("nightly_rate")
       ).data
@@ -28,7 +29,7 @@ export default async function Guesthouse() {
         eyebrow="MAKE YOURSELF AT HOME"
         title="Stay a little. Breathe a little deeper."
         text="Thoughtfully simple spaces for a good night's sleep and a fresh start. Find the room that feels right for you."
-        image={photos.room}
+        image="/stay/hero.webp"
         cta={{ label: "Plan your stay", href: "/book" }}
       />
       <div className="search-wrap">
@@ -53,13 +54,7 @@ export default async function Guesthouse() {
             <article className="room-card" key={room.id}>
               <RoomGallery
                 name={room.name}
-                images={[
-                  ...new Set(
-                    (inventory?.filter((r) => r.category === room.id) || [])
-                      .flatMap((r) => roomImages(r, room.image))
-                      .concat(room.image),
-                  ),
-                ].slice(0, 12)}
+                images={roomPhotos[room.id as RoomCategory]}
               />
               <div className="room-body">
                 <div className="room-meta">

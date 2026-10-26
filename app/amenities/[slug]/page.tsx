@@ -19,6 +19,7 @@ const pages = {
     detail:
       "Whether you need a desk for the day or a regular base, get in touch to discuss workspace availability, current membership plans, and meeting-room needs.",
     image: photos.work,
+    detailImage: "/amenitites/hive/work.webp",
     action: "Enquire about a workspace",
   },
   tanto: {
@@ -36,6 +37,7 @@ const pages = {
     detail:
       "Contact reception for the current menu, dietary requirements, restaurant contact details, and opening hours before your visit.",
     image: photos.food,
+    detailImage: "/amenitites/restaurant/DSC01525.webp",
     action: "Plan a visit to Auromode Restaurant",
   },
   "to-be-two": {
@@ -47,6 +49,7 @@ const pages = {
     features: ["Curated collections", "Showroom discovery", "Thoughtful gifting", "On the Auromode campus"],
     detail: "Collections and stock change over time. Get in touch to confirm opening hours, ask about current products, or plan your visit.",
     image: photos.store,
+    detailImage: "/amenitites/to-be-two/2be2.webp",
     action: "Enquire about the showroom",
   },
 };
@@ -93,7 +96,7 @@ export default async function Detail({
           <p>{p.detail}</p>
           <Link
             className="button"
-            href={"/contact?subject=" + encodeURIComponent(p.name)}
+            href={slug === "hive" ? "https://hive.auromode.in/" : "/contact?subject=" + encodeURIComponent(p.name)}
           >
             {p.action}
             <ArrowUpRight size={17} />
@@ -101,7 +104,7 @@ export default async function Detail({
         </div>
         <img
           className="large-photo"
-          src={p.image}
+          src={p.detailImage}
           alt={`${p.name} atmosphere inspiration`}
         />
       </section>

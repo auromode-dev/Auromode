@@ -1,13 +1,13 @@
+import { roomPhotos } from "./room-photos";
+
 export const photos = {
-  hero: "/images/hero.jpg",
   garden: "/images/garden.jpg",
-  room: "/images/twin.jpg",
-  work: "/images/work.jpg",
-  food: "/images/food.jpg",
-  store: "/images/store.jpg",
+  room: roomPhotos.twin[0],
+  work: "/amenitites/hive/hive.webp",
+  food: "/amenitites/restaurant/DSC01542.webp",
+  store: "/amenitites/to-be-two/DSC01490.webp",
+  office: "/amenitites/office/image3.webp",
   auroville: "/images/auroville.jpg",
-  family: "/images/family.jpg",
-  standard: "/images/standard.jpg",
 };
 export const experiences = [
   {
@@ -50,7 +50,7 @@ export const roomTypes = [
     name: "Studio Suite",
     capacity: 1,
     beds: 1,
-    image: "/images/studio.jpg",
+    image: roomPhotos.studio[0],
     description:
       "A comfortable one-bed suite for a quiet stay at your own pace.",
   },
@@ -59,7 +59,7 @@ export const roomTypes = [
     name: "Twin Room",
     capacity: 2,
     beds: 2,
-    image: "/images/twin.jpg",
+    image: roomPhotos.twin[0],
     description: "Two beds and a welcoming space to settle in together.",
   },
   {
@@ -67,7 +67,7 @@ export const roomTypes = [
     name: "Triple Room",
     capacity: 3,
     beds: 3,
-    image: "/images/triple.jpg",
+    image: roomPhotos.triple[0],
     description: "Three beds with room for friends or family to feel at home.",
   },
   {
@@ -75,7 +75,7 @@ export const roomTypes = [
     name: "Family Suite",
     capacity: 4,
     beds: 4,
-    image: "/images/family-suite.jpg",
+    image: roomPhotos.family[0],
     description:
       "A four-bed suite for shared moments and a slower kind of holiday.",
   },

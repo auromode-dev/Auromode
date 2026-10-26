@@ -13,7 +13,7 @@ export default function Amenities() {
         eyebrow="STAY. WORK. EAT. CONNECT."
         title="One campus. Your kind of everyday."
         text="A little work, a shared meal, something unexpected. Discover the places that make Auromode feel like a community."
-        image={photos.work}
+        image="/amenitites/hero.webp"
       />
       <section className="section">
         <div className="room-grid">
@@ -23,7 +23,7 @@ export default function Amenities() {
               n: "05",
               tag: "OFFICES",
               name: "Office Rentals",
-              image: photos.garden,
+              image: photos.office,
               text: "Newly renovated offices in quiet, green surroundings. A place for your team to settle in and grow.",
               href: "/amenities/offices",
             },

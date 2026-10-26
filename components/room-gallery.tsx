@@ -1,7 +1,6 @@
 ﻿"use client";
 import Image from "next/image";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 export function RoomGallery({
   images,
   name,
@@ -24,24 +23,6 @@ export function RoomGallery({
       />
       {images.length > 1 && (
         <>
-          <button
-            type="button"
-            className="gallery-prev"
-            aria-label={`Previous photo of ${name}`}
-            onClick={() =>
-              setIndex((current + images.length - 1) % images.length)
-            }
-          >
-            <ChevronLeft size={19} />
-          </button>
-          <button
-            type="button"
-            className="gallery-next"
-            aria-label={`Next photo of ${name}`}
-            onClick={() => setIndex((current + 1) % images.length)}
-          >
-            <ChevronRight size={19} />
-          </button>
           <span className="gallery-count" aria-live="polite">
             {current + 1} / {images.length}
           </span>

@@ -17,7 +17,7 @@ export default function Offices() {
         eyebrow="OFFICE RENTALS AT AUROMODE"
         title="A quieter place for your next big idea."
         text="Thoughtfully renovated offices surrounded by nature, with space to work, connect, and grow."
-        image={photos.garden}
+        image={photos.office}
         cta={{ label: "Explore the offices", href: "#offices" }}
       />
       <OfficeRentals />

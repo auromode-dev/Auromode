@@ -1,5 +1,7 @@
 "use client";
 import Image from "next/image";
+import { RoomGallery } from "@/components/room-gallery";
+import { roomPhotos } from "@/lib/room-photos";
 import { normalizeRoomCategory, roomCapacity } from "@/lib/rooms";
 
 import { useEffect, useRef, useState } from "react";
@@ -638,6 +640,15 @@ export function BookingForm() {
           </div>
         </aside>
       </div>
+      <section className="booking-room-gallery" aria-labelledby="room-gallery-title">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">Room gallery</span>
+            <h2 id="room-gallery-title">{room.name}</h2>
+          </div>
+        </div>
+        <RoomGallery key={room.id} name={room.name} images={roomPhotos[stay.room]} />
+      </section>
     </>
   );
 }

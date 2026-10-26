@@ -1,5 +1,6 @@
 ﻿import { Suspense } from "react";
 import { BookingForm } from "@/components/booking-form";
+import { FoodMenu } from "@/components/food-menu";
 export const metadata = {
   title: "Plan Your Stay",
   alternates: { canonical: "/book" },
@@ -23,6 +24,7 @@ export default function Book() {
       >
         <BookingForm />
       </Suspense>
+      <FoodMenu />
     </>
   );
 }

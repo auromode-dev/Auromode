@@ -158,7 +158,7 @@ export async function processNotifications(bookingId?: string) {
           b.checkout,
         ];
         if (
-          admin &&
+          (admin || job.event === "confirmed") &&
           process.env.ADMIN_WHATSAPP_NUMBER &&
           !job.admin_whatsapp_sent
         ) {

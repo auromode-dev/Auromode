@@ -8,6 +8,10 @@ test("direct-booking notifications require admin access and send guest confirmat
     RESEND_API_KEY: "test",
     NOTIFICATION_FROM_EMAIL: "test@example.com",
     ADMIN_NOTIFICATION_EMAIL: "admin@example.com",
+    WHATSAPP_ACCESS_TOKEN: "test",
+    WHATSAPP_PHONE_NUMBER_ID: "test-phone-id",
+    WHATSAPP_TEMPLATE_NAME: "booking_update",
+    ADMIN_WHATSAPP_NUMBER: "919000000001",
   };
   for (const [key, value] of Object.entries(settings)) {
     const previous = process.env[key];
@@ -22,6 +26,8 @@ test("direct-booking notifications require admin access and send guest confirmat
     fail = false,
     sends = 0;
   const patches: Record<string, unknown>[] = [];
+  const whatsappRecipients: string[] = [];
+  let optIn = true;
   const json = (value: unknown) =>
     new Response(JSON.stringify(value), {
       headers: { "Content-Type": "application/json" },
@@ -58,6 +64,14 @@ test("direct-booking notifications require admin access and send guest confirmat
           ? new Response("{}", { status: 503 })
           : json({ id: "email" });
       }
+      if (url.includes("graph.facebook.com")) {
+        const body = JSON.parse(String(init?.body));
+        whatsappRecipients.push(body.to);
+        assert.equal(body.template.name, "booking_update");
+        assert.deepEqual(body.template.components[0].parameters.map((p: { text: string }) => p.text),
+          ["Guest", "avapart_20901010_R22_1", "confirmed", "2090-10-10", "2090-10-12"]);
+        return json({ messages: [{ id: "test-message" }] });
+      }
       if (init?.method === "PATCH") {
         patches.push(JSON.parse(String(init.body)));
         return new Response(null, { status: 204 });
@@ -75,7 +89,8 @@ test("direct-booking notifications require admin access and send guest confirmat
           status: "confirmed",
           payment_status: "unpaid",
           amount: 300000,
-          whatsapp_opt_in: false,
+          whatsapp_opt_in: optIn,
+          phone: "+91 90000 00002",
         });
       throw Error("Unexpected request");
     },
@@ -94,6 +109,14 @@ test("direct-booking notifications require admin access and send guest confirmat
     failed: 0,
   });
   assert.ok(patches.some((p) => p.guest_email_sent === true));
+  assert.deepEqual(whatsappRecipients, ["919000000001", "919000000002"]);
+  assert.ok(patches.some((p) => p.admin_whatsapp_sent === true));
+  assert.ok(patches.some((p) => p.guest_whatsapp_sent === true));
+  whatsappRecipients.length = 0;
+  optIn = false;
+  assert.deepEqual(await (await POST(req())).json(), { delivered: 1, failed: 0 });
+  assert.deepEqual(whatsappRecipients, ["919000000001"]);
+  whatsappRecipients.length = 0;
   patches.length = 0;
   fail = true;
   assert.deepEqual(await (await POST(req())).json(), {
@@ -102,4 +125,5 @@ test("direct-booking notifications require admin access and send guest confirmat
   });
   assert.ok(patches.some((p) => p.next_attempt_at));
   assert.ok(!patches.some((p) => p.guest_email_sent));
+  assert.deepEqual(whatsappRecipients, []);
 });

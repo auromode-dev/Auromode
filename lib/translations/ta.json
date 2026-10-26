@@ -469,5 +469,15 @@
   "Twin Room · up to 2 guests": "இரண்டு படுக்கை அறை · அதிகபட்சம் 2 விருந்தினர்கள்",
   "Triple Room · up to 3 guests": "மூன்று படுக்கை அறை · அதிகபட்சம் 3 விருந்தினர்கள்",
   "Family Suite · up to 4 guests": "குடும்ப சூட் · அதிகபட்சம் 4 விருந்தினர்கள்",
-  "For all {guests} guests. INR {total} total for 1 night, including taxes.": "மொத்தம் {guests} விருந்தினர்களுக்கு. 1 இரவுக்கு மொத்தம் INR {total}, வரிகள் உட்பட."
+  "For all {guests} guests. INR {total} total for 1 night, including taxes.": "மொத்தம் {guests} விருந்தினர்களுக்கு. 1 இரவுக்கு மொத்தம் INR {total}, வரிகள் உட்பட.",
+  "Tree-shaded courtyard at Auromode": "ஆரோமோடில் மர நிழல் சூழ்ந்த முற்றம்",
+  "Auromode sign on a terracotta wall": "சுடுமண் நிறச் சுவரில் ஆரோமோட் பெயர்ப்பலகை",
+  "Birdhouse among palms in the Auromode garden": "ஆரோமோட் தோட்டத்தில் பனை மரங்களுக்கு இடையே பறவைக்கூடு",
+  "Room gallery": "அறைப் புகைப்படங்கள்",
+  "Auromode - photo {number}": "ஆரோமோட் - புகைப்படம் {number}",
+  "Show photo {number} of Auromode": "ஆரோமோடின் புகைப்படம் {number} ஐக் காட்டு",
+  "Food menu": "உணவுப் பட்டியல்",
+  "Zoom in": "பெரிதாக்கு",
+  "Zoom out": "சிறிதாக்கு",
+  "Menu page {number}": "உணவுப் பட்டியல் பக்கம் {number}"
 }

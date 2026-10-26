@@ -72,7 +72,7 @@ Use Vercel Cron on a suitable plan or another trusted scheduler. No scheduler is
 
 For WhatsApp, set the API token, business phone-number ID, supported Graph API version, and an approved English template name. The template must accept five body parameters in order: guest first name, booking reference, event, check-in, check-out. Set the admin WhatsApp destination. Guest WhatsApp updates require the optional opt-in checkbox. Without WhatsApp credentials, email delivery still works. WhatsApp retries are at-least-once: a worker failure immediately after provider acceptance can produce a duplicate.
 
-Confirmed-booking emails include payment status and amount; these are booking acknowledgements, not tax invoices. Check-in reminders include reception hours and contact instructions. New bookings and cancellations notify reception. Configuration changes do not retroactively resend completed outbox entries.
+Confirmed-booking emails include payment status and amount; these are booking acknowledgements, not tax invoices. Check-in reminders include reception hours and contact instructions. New bookings and cancellations notify reception. WhatsApp confirmation events notify both reception and opted-in guests when configured. Configuration changes do not retroactively resend completed outbox entries.
 
 ## Deployment
 

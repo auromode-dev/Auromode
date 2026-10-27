@@ -1910,7 +1910,7 @@ html:not([lang=en]) .header .button{white-space:normal}html:is([lang=ta],[lang=h
 h1 em,h2 em,blockquote em {font-style:normal}
 h2 {font-size:clamp(30px,3.2vw,46px);letter-spacing:-1.6px;line-height:1.2}
 .button {border-radius:999px;gap:16px}
-.button:hover {background:var(--earth);border-color:var(--earth)}
+.button:hover {background:var(--earth);border-color:var(--earth);color:white}
 .header {height:92px;gap:20px;padding:0 3%;background:#faf8f4f5;backdrop-filter:blur(16px);border-bottom:1px solid #354e3d12}
 .main-nav {border-radius:999px;background:#eaece5;padding:6px;gap:2px;margin:0 auto}
 .main-nav>a {padding:10px 14px;white-space:nowrap;font-size:11px;border-radius:999px;transition:background .2s,color .2s}
@@ -1982,6 +1982,23 @@ h2 {font-size:clamp(30px,3.2vw,46px);letter-spacing:-1.6px;line-height:1.2}
  .section {padding:60px 24px}.stay-guides .section-heading,.ecosystem .section-heading {margin-bottom:32px}.guide-grid {grid-template-columns:1fr;gap:28px}.guide-card {padding-bottom:28px;border-bottom:1px solid var(--border)}.guide-card:last-child {padding-bottom:0;border:0}.guide-card h3 {font-size:21px}.guide-card p {max-width:none}.guide-card>svg {margin-bottom:12px}
  .experience-grid {grid-template-columns:1fr;gap:32px}.experience-image {height:235px}.card-heading h3 {font-size:21px}.ecosystem {padding-top:10px}.intro {margin:0 16px 55px;padding:30px 24px;grid-template-columns:1fr}.intro h2 {font-size:32px}.intro-images {padding-right:10px}.intro-main {height:290px}.story-stamp {width:90px;height:90px}.story-stamp strong {font-size:24px}.story-stamp span {font-size:5px}
  .section-heading h2,.explore-copy h2 {font-size:32px}.benefits h2 {font-size:30px}.cta-banner {padding:38px 24px;border-radius:18px}.cta-banner h2 {font-size:36px}.page-hero h1,.page-heading h1 {font-size:38px}.philosophy blockquote {font-size:27px}
+}
+
+/* Keep navigation and public calls to action readable at every breakpoint. */
+.main-nav > a {font-size:14px}
+.header .button-small,.guide-card .button {font-size:14px}
+.hero-content .button,.page-hero .button,.cta-banner .button {font-size:18px}
+.availability .button {font-size:16px;white-space:normal}
+@media(max-width:1150px) and (min-width:801px) {
+ .main-nav > a {font-size:12px}
+ .header .button-small {font-size:12px}
+}
+@media(max-width:800px) {
+ .main-nav > a {font-size:16px}
+}
+@media(max-width:560px) {
+ .header .button-small {font-size:12px}
+ .availability .button {font-size:14px}
 }
 
 /* Transform animations are owned by Framer Motion. */

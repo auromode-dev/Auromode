@@ -38,31 +38,99 @@ async function main() {
     user: { ...user, app_metadata: { provider: "email" } },
   };
 
- const browser=await chromium.launch({channel:'msedge',headless:true});
- try {
-  for(const width of [1440,390]) {
-   const page=await browser.newPage({viewport:{width,height:950}});let saved=0;
-   await page.addInitScript(({key,session})=>localStorage.setItem(key,JSON.stringify(session)),{key:'sb-'+new URL(base).hostname.split('.')[0]+'-auth-token',session:{...session,user,access_token:fresh}});
-   await page.routeWebSocket('**/realtime/**',s=>s.close());
-   await page.route('**/api/admin/booking-notifications',r=>r.fulfill({json:{delivered:2,failed:0}}));
-   await page.route('**/api/availability', route=>route.fulfill({json:{rooms:[{id:'room-test',name:'Twin A',nightly_rate:200000}]}}));
-   await page.route(base+'/**',async route=>{
-    const url=new URL(route.request().url());
-    if(url.pathname==='/auth/v1/user')return route.fulfill({json:user});
-    if(url.pathname==='/rest/v1/rpc/available_rooms')return route.fulfill({json:[{id:'room-test',name:'Twin A',nightly_rate:200000}]});
-    if(url.pathname==='/rest/v1/rpc/reception_booking'){
-     const data=route.request().postDataJSON();assert.equal(data.p_guest.expectedAmount,400000);assert.equal(data.p_guest.whatsappOptIn,false);assert.ok(data.p_request_id);saved++;return route.fulfill({json:{id:'test-booking',status:'confirmed'}});
+  const browser = await chromium.launch({ channel: "msedge", headless: true });
+  try {
+    for (const width of [1440, 390]) {
+      const page = await browser.newPage({ viewport: { width, height: 950 } });
+      let saved = 0;
+      await page.addInitScript(
+        ({ key, session }) =>
+          localStorage.setItem(key, JSON.stringify(session)),
+        {
+          key: "sb-" + new URL(base).hostname.split(".")[0] + "-auth-token",
+          session: { ...session, user, access_token: fresh },
+        },
+      );
+      await page.routeWebSocket("**/realtime/**", (s) => s.close());
+      await page.route("**/api/admin/booking-notifications", (r) =>
+        r.fulfill({ json: { delivered: 2, failed: 0 } }),
+      );
+      await page.route("**/api/availability", (route) =>
+        route.fulfill({
+          json: {
+            rooms: [{ id: "room-test", name: "Twin A", total_amount: 400000 }],
+          },
+        }),
+      );
+      await page.route(base + "/**", async (route) => {
+        const url = new URL(route.request().url());
+        if (url.pathname === "/auth/v1/user")
+          return route.fulfill({ json: user });
+        if (url.pathname === "/rest/v1/rpc/available_rooms_priced")
+          return route.fulfill({
+            json: [{ id: "room-test", name: "Twin A", total_amount: 400000 }],
+          });
+        if (url.pathname === "/rest/v1/rpc/reception_booking") {
+          const data = route.request().postDataJSON();
+          assert.equal(data.p_guest.expectedAmount, 400000);
+          assert.equal(data.p_guest.whatsappOptIn, false);
+          assert.ok(data.p_request_id);
+          saved++;
+          return route.fulfill({
+            json: { id: "test-booking", status: "confirmed" },
+          });
+        }
+        if (url.pathname.startsWith("/rest/v1/"))
+          return route.fulfill({ json: [] });
+        return route.abort();
+      });
+      await page.goto(
+        (process.env.TEST_BASE_URL || "http://localhost:3000") + "/admin",
+      );
+      await page
+        .getByRole("button", { name: "Direct booking", exact: true })
+        .click();
+      const form = page.locator(".reception-booking");
+      await form.waitFor();
+      assert.equal(
+        await page.getByText("Add a physical room", { exact: true }).count(),
+        0,
+      );
+      await form.getByLabel("Check-in", { exact: true }).fill("2090-10-10");
+      await form.getByLabel("Check-out", { exact: true }).fill("2090-10-12");
+      await form
+        .getByRole("button", { name: "Check availability", exact: true })
+        .click();
+      await form.getByLabel("First name", { exact: true }).fill("Test");
+      await form.getByLabel("Last name", { exact: true }).fill("Guest");
+      await form.getByLabel("Email", { exact: true }).fill("test@example.com");
+      await form.getByLabel("Phone", { exact: true }).fill("123456789");
+      await form
+        .getByLabel("The guest has authorized", { exact: false })
+        .check();
+      await form.screenshot({ path: "artifacts/reception-" + width + ".png" });
+      assert.ok(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      );
+      await form
+        .getByRole("button", { name: "Confirm booking and block rooms" })
+        .click();
+      await page
+        .getByText("Booking test-booking: confirmed.", { exact: false })
+        .waitFor();
+      assert.equal(saved, 1);
+      console.log(
+        "PASS " + width + "px reception booking (mocked Supabase only)",
+      );
+      await page.close();
     }
-    if(url.pathname.startsWith('/rest/v1/'))return route.fulfill({json:[]});
-    return route.abort();
-   });
-   await page.goto('http://localhost:3000/admin');await page.getByRole('button',{name:'Rooms',exact:true}).click();
-   const form=page.locator('.reception-booking');await form.waitFor();assert.equal(await page.getByText('Add a physical room',{exact:true}).count(),0);
-   await form.getByLabel('Check-in',{exact:true}).fill('2090-10-10');await form.getByLabel('Check-out',{exact:true}).fill('2090-10-12');
-   await form.getByRole('button',{name:'Check availability',exact:true}).click();await form.getByLabel('First name',{exact:true}).fill('Test');await form.getByLabel('Last name',{exact:true}).fill('Guest');await form.getByLabel('Email',{exact:true}).fill('test@example.com');await form.getByLabel('Phone',{exact:true}).fill('123456789');await form.getByLabel('The guest has authorized',{exact:false}).check();
-   await form.screenshot({path:'artifacts/reception-'+width+'.png'});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
-   await form.getByRole('button',{name:'Confirm booking and block rooms'}).click();await page.getByText('Booking test-booking: confirmed.',{exact:false}).waitFor();assert.equal(saved,1);console.log('PASS '+width+'px reception booking (mocked Supabase only)');await page.close();
+  } finally {
+    await browser.close();
   }
- }finally{await browser.close();}
 }
-main().catch(e=>{console.error(e);process.exitCode=1;});
+main().catch((e) => {
+  console.error(e);
+  process.exitCode = 1;
+});

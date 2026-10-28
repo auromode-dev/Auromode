@@ -5,7 +5,7 @@ export async function checkAvailabilityUI(page: Page) {
     {
       id: "test-room",
       name: "Standard room",
-      nightly_rate: 250000,
+      total_amount: 500000,
       cancellation_terms: "Test cancellation terms",
     },
   ];
@@ -29,12 +29,13 @@ export async function checkAvailabilityUI(page: Page) {
     }),
   );
   await page.goto(
-    "http://localhost:3000/book?checkin=2090-10-10&checkout=2090-10-12&adults=2",
+    (process.env.TEST_BASE_URL || "http://localhost:3000") +
+      "/book?checkin=2090-10-10&checkout=2090-10-12&adults=2",
   );
   await page
     .getByText("1 room available for your dates.", { exact: true })
     .waitFor();
-  assert.match(await page.locator(".booking-form").innerText(), /₹5,000 total/);
+  assert.match(await page.locator(".booking-form").innerText(), /INR 5,000 total/);
   assert.equal(
     await page.getByRole("button", { name: "Prepare email enquiry" }).count(),
     0,
@@ -91,7 +92,8 @@ export async function checkAvailabilityUI(page: Page) {
     resolveRequest(route);
   });
   await page.goto(
-    "http://localhost:3000/book?checkin=2090-10-10&checkout=2090-10-12&adults=2",
+    (process.env.TEST_BASE_URL || "http://localhost:3000") +
+      "/book?checkin=2090-10-10&checkout=2090-10-12&adults=2",
   );
   const route = await heldRequest;
   await page.getByLabel("Check-out", { exact: true }).fill("2090-10-15");
@@ -101,7 +103,7 @@ export async function checkAvailabilityUI(page: Page) {
     contentType: "application/json",
     body: JSON.stringify({
       mode: "live",
-      rooms: [{ id: "stale", nightly_rate: 1 }],
+      rooms: [{ id: "stale", total_amount: 2 }],
       checkoutEnabled: true,
     }),
   });

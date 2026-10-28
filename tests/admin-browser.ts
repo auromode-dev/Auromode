@@ -40,8 +40,29 @@ async function main() {
   const browser = await chromium.launch({ channel: "msedge", headless: true });
   try {
     const page = await browser.newPage();
-    const initialRoom = { id: "test-room", name: "Session regression test", room_number: 99, category: "twin", capacity: 2, nightly_rate: 100000, non_season_rate: 100000, season_rate: 150000, active: true, image_url: "/images/twin.jpg", image_urls: ["/images/twin.jpg"], cancellation_terms: "Test only" };
-    let fixture: Record<string, unknown>[] = [{...initialRoom}];
+    const initialRoom = {
+      id: "test-room",
+      name: "Session regression test",
+      room_number: 99,
+      category: "twin",
+      capacity: 2,
+      nightly_rate: 100000,
+      total_amount: 200000,
+      non_season_rate: 100000,
+      season_rate: 150000,
+      active: true,
+      image_url: "/images/twin.jpg",
+      image_urls: ["/images/twin.jpg"],
+      cancellation_terms: "Test only",
+    };
+    let fixture: Record<string, unknown>[] = [{ ...initialRoom }];
+    const bookings: Record<string, unknown>[] = [];
+    await page.route("**/api/availability", (route) =>
+      route.fulfill({ status: 200, json: { rooms: [initialRoom] } }),
+    );
+    await page.route("**/api/admin/booking-notifications", (route) =>
+      route.fulfill({ status: 200, json: { failed: 0, delivered: 1 } }),
+    );
     let deleted = 0,
       blockDelete = false;
     let refreshed = 0,
@@ -67,6 +88,38 @@ async function main() {
           json: { ...session, user, access_token: fresh },
         });
       }
+      if (url.pathname === "/rest/v1/rpc/reception_booking") {
+        const data = request.postDataJSON();
+        assert.equal(data.p_guest.firstName, "Test");
+        assert.equal(data.p_guest.lastName, "Guest");
+        assert.equal(data.p_guest.phone, "9876543210");
+        bookings.push({
+          id: "booking-test",
+          first_name: data.p_guest.firstName,
+          last_name: data.p_guest.lastName,
+          email: data.p_guest.email,
+          phone: data.p_guest.phone,
+          checkin: data.p_checkin,
+          checkout: data.p_checkout,
+          room_id: "test-room",
+          amount: data.p_guest.expectedAmount,
+          status: "confirmed",
+          payment_status: "unpaid",
+          booking_source: "reception",
+          requests: "",
+        });
+        bookings.push({
+          ...bookings[0],
+          id: "other-guest",
+          first_name: "Another",
+        });
+        return route.fulfill({
+          status: 200,
+          json: { id: "booking-test", status: "confirmed" },
+        });
+      }
+      if (url.pathname === "/rest/v1/bookings" && request.method() === "GET")
+        return route.fulfill({ status: 200, json: bookings });
       if (url.pathname === "/rest/v1/rooms" && request.method() === "POST") {
         assert.equal(request.headers().authorization, "Bearer " + fresh);
         saved++;
@@ -83,7 +136,11 @@ async function main() {
       }
       if (url.pathname === "/rest/v1/rooms" && request.method() === "PATCH") {
         saved++;
-        if (deny) return route.fulfill({status:403,json:{code:"42501",message:"Denied"}});
+        if (deny)
+          return route.fulfill({
+            status: 403,
+            json: { code: "42501", message: "Denied" },
+          });
         fixture = [{ ...fixture[0], ...request.postDataJSON() }];
         return route.fulfill({ status: 200, json: [{ id: "test-room" }] });
       }
@@ -103,9 +160,78 @@ async function main() {
         return route.fulfill({ status: 200, json: [] });
       return route.abort();
     });
-    await page.goto("http://localhost:3000/admin");
+    await page.goto(
+      (process.env.TEST_BASE_URL || "http://localhost:3000") + "/admin",
+    );
+    await page
+      .getByRole("button", { name: "Direct booking", exact: true })
+      .click();
+    await page.getByLabel("First name", { exact: true }).fill("Test");
+    await page.getByLabel("Last name", { exact: true }).fill("Guest");
+    await page.getByLabel("Email", { exact: true }).fill("test@example.com");
+    await page.getByLabel("Phone", { exact: true }).fill("9876543210");
+    await page.getByLabel("Check-in", { exact: true }).fill("2090-10-10");
+    await page.getByLabel("Check-out", { exact: true }).fill("2090-10-12");
+    await page
+      .getByRole("button", { name: "Check availability", exact: true })
+      .click();
+    await page.getByLabel(/The guest has authorized/).check();
+    await page
+      .getByRole("button", {
+        name: "Confirm booking and block rooms",
+        exact: true,
+      })
+      .click();
+    await page.getByText(/Booking notifications accepted/).waitFor();
+    await page.getByRole("button", { name: "Bookings", exact: true }).click();
+    assert.equal(await page.locator("tbody tr").count(), 2);
+    assert.match(await page.locator("tbody").innerText(), /9876543210/);
+    await page.getByRole("button", { name: "Guests", exact: true }).click();
+    assert.equal(await page.locator("tbody tr").count(), 2);
+    console.log(
+      "PASS direct booking contact details persist in Bookings and separate Guests histories (mocked)",
+    );
     await page.getByRole("button", { name: "Rooms", exact: true }).click();
-    await page.getByRole("button", {name:"Edit Session regression test",exact:true}).click();
+    assert.equal(await page.locator(".reception-booking").count(), 0);
+    await page
+      .getByRole("button", {
+        name: "Edit Session regression test",
+        exact: true,
+      })
+      .click();
+    const editor = page.getByRole("dialog", { name: "Edit room", exact: true });
+    await editor.waitFor();
+    assert.equal(
+      await editor
+        .getByRole("button", { name: "Close", exact: true })
+        .evaluate((el) => el === document.activeElement),
+      true,
+    );
+    await page.keyboard.press("Escape");
+    await editor.waitFor({ state: "hidden" });
+    assert.equal(
+      await page
+        .getByRole("button", {
+          name: "Edit Session regression test",
+          exact: true,
+        })
+        .evaluate((el) => el === document.activeElement),
+      true,
+    );
+    await page
+      .getByRole("button", {
+        name: "Edit Session regression test",
+        exact: true,
+      })
+      .click();
+    await page.setViewportSize({ width: 390, height: 844 });
+    const editorBounds = await editor.boundingBox();
+    assert.ok(
+      editorBounds &&
+        editorBounds.x >= 0 &&
+        editorBounds.x + editorBounds.width <= 390,
+    );
+    await page.setViewportSize({ width: 1440, height: 1000 });
     await page.getByLabel("Room name / number").fill("Session regression test");
     await page.getByLabel("Room number", { exact: true }).fill("99");
     await page.getByLabel("Non-season nightly rate (INR)").fill("1000");
@@ -204,10 +330,15 @@ async function main() {
     console.log(
       "PASS multiple images, cover selection, gallery removal, protected deletion and successful deletion",
     );
-    fixture = [{...initialRoom}];
+    fixture = [{ ...initialRoom }];
     await page.reload();
-    await page.getByRole("button", {name:"Rooms",exact:true}).click();
-    await page.getByRole("button", {name:"Edit Session regression test",exact:true}).click();
+    await page.getByRole("button", { name: "Rooms", exact: true }).click();
+    await page
+      .getByRole("button", {
+        name: "Edit Session regression test",
+        exact: true,
+      })
+      .click();
     deny = true;
     await page.getByLabel("Room name / number").fill("Denied test");
     await page.getByLabel("Room number", { exact: true }).fill("99");

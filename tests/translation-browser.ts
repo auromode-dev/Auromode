@@ -32,9 +32,13 @@ async function main() {
         .filter({ hasText: name })
         .click();
     };
-    await page.goto("http://localhost:3000/amenities/offices", {
-      waitUntil: "domcontentloaded",
-    });
+    await page.goto(
+      (process.env.TEST_BASE_URL || "http://localhost:3000") +
+        "/amenities/offices",
+      {
+        waitUntil: "domcontentloaded",
+      },
+    );
     const english = "A quieter place for your next big idea.";
     await page.locator("h1").filter({ hasText: english }).waitFor();
     for (const language of languages.filter((l) => l.code !== "en")) {
@@ -66,9 +70,15 @@ async function main() {
       "/availability",
       "/book",
     ]) {
-      await page.goto("http://localhost:3000" + path + "?lang=en", {
-        waitUntil: "domcontentloaded",
-      });
+      await page.goto(
+        (process.env.TEST_BASE_URL || "http://localhost:3000") +
+          "" +
+          path +
+          "?lang=en",
+        {
+          waitUntil: "domcontentloaded",
+        },
+      );
       await page.locator("h1").waitFor();
       const texts = await page.evaluate(() => {
         const excluded =
@@ -119,9 +129,13 @@ async function main() {
       "Public text missing from the stored catalog",
     );
 
-    await page.goto("http://localhost:3000/contact?lang=en", {
-      waitUntil: "domcontentloaded",
-    });
+    await page.goto(
+      (process.env.TEST_BASE_URL || "http://localhost:3000") +
+        "/contact?lang=en",
+      {
+        waitUntil: "domcontentloaded",
+      },
+    );
     await page.locator('input[name="name"]').fill("Private Guest Name");
     await page.locator('input[name="email"]').fill("private@example.com");
     await page.locator("textarea").fill("Private travel plans");
@@ -155,9 +169,12 @@ async function main() {
       "New unpublished copy must stay in English.",
     );
 
-    await page.goto("http://localhost:3000/amenities", {
-      waitUntil: "domcontentloaded",
-    });
+    await page.goto(
+      (process.env.TEST_BASE_URL || "http://localhost:3000") + "/amenities",
+      {
+        waitUntil: "domcontentloaded",
+      },
+    );
     await page.waitForFunction(() => document.documentElement.lang === "ta");
     assert.equal(
       await page.locator("h1").innerText(),
@@ -194,7 +211,7 @@ async function main() {
             {
               id: "room-test",
               name: "Twin",
-              nightly_rate: 200000,
+              total_amount: 400000,
               cancellation_terms:
                 "Please contact reception for cancellation terms.",
             },
@@ -203,7 +220,8 @@ async function main() {
       }),
     );
     await page.goto(
-      "http://localhost:3000/book?lang=es&checkin=2090-10-10&checkout=2090-10-12&adults=2",
+      (process.env.TEST_BASE_URL || "http://localhost:3000") +
+        "/book?lang=es&checkin=2090-10-10&checkout=2090-10-12&adults=2",
       { waitUntil: "domcontentloaded" },
     );
     await page.getByRole("button", { name: "Reservar ahora" }).click();
@@ -224,9 +242,12 @@ async function main() {
     await choose("English");
     await page.getByRole("button", { name: "Book now" }).waitFor();
 
-    await page.goto("http://localhost:3000/admin?lang=fr", {
-      waitUntil: "domcontentloaded",
-    });
+    await page.goto(
+      (process.env.TEST_BASE_URL || "http://localhost:3000") + "/admin?lang=fr",
+      {
+        waitUntil: "domcontentloaded",
+      },
+    );
     await page.waitForFunction(() => document.documentElement.lang === "en");
     assert.deepEqual(
       translationRequests,

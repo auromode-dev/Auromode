@@ -9,7 +9,7 @@ export default function About() {
   return (
     <>
       <PageHero
-        eyebrow="ROOTED IN AUROVILLE, SINCE 1975"
+        eyebrow="ROOTED IN AUROVILLE, SINCE 2000"
         title="A place with a past. A community with a future."
         text="Our story is one of transformation, connection, and the simple joy of welcoming people."
         image="/about/hero.webp"
@@ -25,7 +25,7 @@ export default function About() {
         </div>
         <div>
           <p>
-            Auromode began in 1975 as a fashion factory in Auroville. It was a
+            Auromode began in 2000 as a fashion factory in Auroville. It was a
             place of making: people coming together, sharing skills, and
             creating something with purpose.
           </p>
@@ -45,7 +45,7 @@ export default function About() {
         <div className="timeline">
           {[
             [
-              "1975",
+              "2000",
               "A place of making",
               "Auromode begins its journey as a fashion factory.",
             ],
@@ -116,6 +116,7 @@ export default function About() {
         <RoomGallery
           name="Auromode"
           images={[
+            "/about/map.JPG",
             "/about/DSC01417.webp",
             "/about/reception.webp",
             "/about/garden.webp",

@@ -14,14 +14,14 @@ type Suggestion = {
   quantity: number;
   checkin: string;
   checkout: string;
-  nightly_rate: number;
+  total_amount: number;
 };
 type Availability = {
   mode: "live";
   checkoutEnabled: boolean;
   rooms: {
     id: string;
-    nightly_rate: number;
+    total_amount: number;
     cancellation_terms: string;
     name: string;
   }[];
@@ -51,11 +51,16 @@ export function BookingForm() {
       Math.max(
         1,
         Math.ceil(
-          Number(query.get("adults") || (query.get("room") === "studio" ? 1 : 2)) /
+          Number(
+            query.get("adults") || (query.get("room") === "studio" ? 1 : 2),
+          ) /
             roomCapacity[
               normalizeRoomCategory(
                 query.get("room"),
-                Number(query.get("adults") || (query.get("room") === "studio" ? 1 : 2)),
+                Number(
+                  query.get("adults") ||
+                    (query.get("room") === "studio" ? 1 : 2),
+                ),
               )
             ],
         ),
@@ -81,10 +86,10 @@ export function BookingForm() {
     stay.checkin && stay.checkout ? nights(stay.checkin, stay.checkout) : 0;
   const quantity = Number(stay.quantity);
   const hasRooms = !!availability && availability.rooms.length >= quantity;
-  const nightlyRate =
+  const totalAmount =
     availability?.rooms
       .slice(0, quantity)
-      .reduce((sum, r) => sum + r.nightly_rate, 0) || 0;
+      .reduce((sum, r) => sum + r.total_amount, 0) || 0;
   const update = (key: string, value: string) => {
     requestVersion.current++;
     setBusy(false);
@@ -183,7 +188,7 @@ export function BookingForm() {
       ...stay,
       consent: true,
       whatsappOptIn: data.whatsappOptIn === "on",
-      expectedAmount: nightlyRate * length,
+      expectedAmount: totalAmount,
     };
     if (!hasRooms || !availability?.checkoutEnabled) return;
     setBusy(true);
@@ -388,7 +393,11 @@ export function BookingForm() {
                       for your dates.
                     </strong>
                     <p>
-                      {`From ₹${(nightlyRate / 100).toLocaleString("en-IN")} per night · ₹${((nightlyRate * length) / 100).toLocaleString("en-IN")} total for ${length} ${length === 1 ? "night" : "nights"}, including taxes.`}
+                      {`For all ${Number(stay.adults) + Number(stay.children)} guests. INR ${(totalAmount / 100).toLocaleString("en-IN")} total for ${length} ${length === 1 ? "night" : "nights"}, including taxes.`}
+                    </p>
+                    <p>
+                      January–March: season rates. April–December: normal rates.
+                      Each night is priced by its date.
                     </p>
                     <p>
                       Availability is checked live. Your room is reserved only
@@ -408,6 +417,10 @@ export function BookingForm() {
                           .map((r) => r.cancellation_terms),
                       ),
                     ].join(" / ")}
+                    <br />
+                    <a className="inline-link" href="/cancellation-policy">
+                      Reservations &amp; Cancellation Policy
+                    </a>
                   </p>
                   {step === "availability" && (
                     <button
@@ -528,7 +541,14 @@ export function BookingForm() {
             </>
           )}
           {message && (
-            <div className={step === "availability" && availability && !hasRooms ? "notice availability-unavailable" : "notice"} role="status">
+            <div
+              className={
+                step === "availability" && availability && !hasRooms
+                  ? "notice availability-unavailable"
+                  : "notice"
+              }
+              role="status"
+            >
               {done && <Check size={20} />}
               <p
                 translate={
@@ -569,7 +589,7 @@ export function BookingForm() {
                       : {option.checkin} to {option.checkout}
                     </p>
                     <p>
-                      {`For all ${Number(stay.adults) + Number(stay.children)} guests. INR ${((option.nightly_rate * length) / 100).toLocaleString("en-IN")} total for ${length} ${length === 1 ? "night" : "nights"}, including taxes.`}
+                      {`For all ${Number(stay.adults) + Number(stay.children)} guests. INR ${(option.total_amount / 100).toLocaleString("en-IN")} total for ${length} ${length === 1 ? "night" : "nights"}, including taxes.`}
                     </p>
                     <button
                       type="button"
@@ -593,7 +613,6 @@ export function BookingForm() {
                 ))}
               </section>
             )}
-
         </div>
         <aside className="booking-aside">
           <Image width={900} height={600} src={room.image} alt={room.name} />
@@ -635,19 +654,28 @@ export function BookingForm() {
               </a>
               <br />
               <a href="tel:+914132622224">+91 413 262 22 24</a>
+              <br />
+              <a href="tel:+917871562343">+91 78715 62343</a>
             </p>
             <p className="form-note">Monday–Saturday · 9:30 AM–5:00 PM</p>
           </div>
         </aside>
       </div>
-      <section className="booking-room-gallery" aria-labelledby="room-gallery-title">
+      <section
+        className="booking-room-gallery"
+        aria-labelledby="room-gallery-title"
+      >
         <div className="section-heading">
           <div>
             <span className="eyebrow">Room gallery</span>
             <h2 id="room-gallery-title">{room.name}</h2>
           </div>
         </div>
-        <RoomGallery key={room.id} name={room.name} images={roomPhotos[stay.room]} />
+        <RoomGallery
+          key={room.id}
+          name={room.name}
+          images={roomPhotos[stay.room]}
+        />
       </section>
     </>
   );

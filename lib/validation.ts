@@ -73,13 +73,25 @@ export const guestSchema = z.object({
   consent: z.literal(true),
   whatsappOptIn: z.boolean().default(false),
 });
-export const contactSchema = z.object({
-  name: z.string().trim().min(1).max(120),
-  email: z.string().email().max(254),
-  phone: z.string().max(30).default(""),
-  subject: z.string().trim().min(1).max(160),
-  message: z.string().trim().min(1).max(4000),
-});
+export const contactSchema = z
+  .object({
+    name: z.string().trim().min(1).max(120),
+    email: z.string().email().max(254),
+    phone: z.string().max(30).default(""),
+    subject: z.string().trim().min(1).max(160),
+    message: z.string().trim().min(1).max(4000),
+    requestType: z.enum(["enquiry", "cancellation"]).default("enquiry"),
+    bookingReference: z.string().trim().max(100).default(""),
+  })
+  .superRefine((value, ctx) => {
+    if (value.requestType === "cancellation" && !value.bookingReference) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["bookingReference"],
+        message: "Enter your booking reference.",
+      });
+    }
+  });
 export function nights(checkin: string, checkout: string) {
   return Math.round(
     (new Date(checkout).getTime() - new Date(checkin).getTime()) / 86400000,

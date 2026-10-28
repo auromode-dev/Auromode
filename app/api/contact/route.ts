@@ -1,5 +1,5 @@
 import { processContactEmails } from "@/lib/contact-notifications";
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { database } from "@/lib/server";
 import { contactSchema } from "@/lib/validation";
 export async function POST(request: Request) {
@@ -24,8 +24,13 @@ export async function POST(request: Request) {
       },
       { status: 503 },
     );
-  const id=crypto.randomUUID();
-  const { error } = await db.from("enquiries").insert({...p.data,id,notify_email:true});
+  const id = crypto.randomUUID();
+  const { requestType, bookingReference, ...enquiry } = p.data;
+  if (requestType === "cancellation")
+    enquiry.subject = `Cancellation request - ${bookingReference}`;
+  const { error } = await db
+    .from("enquiries")
+    .insert({ ...enquiry, id, notify_email: true });
   if (error)
     return NextResponse.json(
       {
@@ -34,7 +39,9 @@ export async function POST(request: Request) {
       },
       { status: 503 },
     );
-  let notification={pending:true};
-  try { notification=await processContactEmails(id); } catch {}
-  return NextResponse.json({ ok: true, emailPending:notification.pending });
+  let notification = { pending: true };
+  try {
+    notification = await processContactEmails(id);
+  } catch {}
+  return NextResponse.json({ ok: true, emailPending: notification.pending });
 }

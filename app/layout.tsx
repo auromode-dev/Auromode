@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SiteShell } from "@/components/site-shell";
+import { SiteLoader } from "@/components/site-loader";
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://auromode.in",
@@ -18,6 +19,9 @@ export const metadata: Metadata = {
     description: "Come for a stay. Find a sense of belonging.",
     images: ["/opengraph-image"],
   },
+  other: {
+    "facebook-domain-verification": "3005qythk36skizk7fog8kuu0odmh1",
+  },
 };
 export default function RootLayout({
   children,
@@ -30,6 +34,7 @@ export default function RootLayout({
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        <SiteLoader />
         <SiteShell>{children}</SiteShell>
         <script
           type="application/ld+json"

@@ -1,6 +1,6 @@
 "use client";
 import { MotionLink as Link, MotionButton } from "@/components/motion-controls";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import {
   ArrowDown,
@@ -23,20 +23,41 @@ const slides = [
 export function Hero() {
   const reduce = useReducedMotion();
   const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+  function changeSlide(step: number) {
+    setDirection(step);
+    setIndex((current) => (current + step + slides.length) % slides.length);
+  }
   return (
     <section className="hero">
-      <motion.img
-        key={index}
-        initial={false}
-        animate={reduce ? { opacity: 1 } : { opacity: [0.65, 1] }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="hero-image"
-        src={slides[index].image}
-        alt={slides[index].alt}
-        fetchPriority="high"
-      />
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.img
+          key={index}
+          custom={direction}
+          variants={{
+            enter: (step: number) => ({ x: reduce ? 0 : `${step * 100}%` }),
+            center: { x: 0 },
+            exit: (step: number) => ({ x: reduce ? 0 : `${step * -100}%` }),
+          }}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: reduce ? 0 : 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="hero-image"
+          src={slides[index].image}
+          alt={slides[index].alt}
+          fetchPriority="high"
+        />
+      </AnimatePresence>
       <div className="hero-shade" />
-      <motion.div className="hero-content" initial={false} animate={reduce ? { y: 0, opacity: 1 } : { y: [12, 0], opacity: [0.8, 1] }} transition={{ duration: 0.65, ease: "easeOut" }}>
+      <motion.div
+        className="hero-content"
+        initial={false}
+        animate={
+          reduce ? { y: 0, opacity: 1 } : { y: [12, 0], opacity: [0.8, 1] }
+        }
+        transition={{ duration: 0.65, ease: "easeOut" }}
+      >
         <div className="hero-eyebrow">
           <span /> ROOTED IN AUROVILLE. OPEN TO YOU.
         </div>
@@ -64,7 +85,7 @@ export function Hero() {
           <MotionButton
             type="button"
             aria-label="Previous photo"
-            onClick={() => setIndex((index + 2) % 3)}
+            onClick={() => changeSlide(-1)}
           >
             <ChevronLeft size={17} />
           </MotionButton>
@@ -74,7 +95,7 @@ export function Hero() {
           <MotionButton
             type="button"
             aria-label="Next photo"
-            onClick={() => setIndex((index + 1) % 3)}
+            onClick={() => changeSlide(1)}
           >
             <ChevronRight size={17} />
           </MotionButton>

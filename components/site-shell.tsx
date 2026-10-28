@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { isLanguage, type LanguageCode } from "@/lib/languages";
 import { LanguagePicker } from "@/components/language-picker";
 import { PublicTranslation } from "@/components/public-translation";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { useCallback, useEffect, useState } from "react";
 import {
   ArrowUpRight,
@@ -25,7 +26,7 @@ export function Logo() {
         width={244}
         height={140}
       />
-      <span className="brand-subtitle">Apartments &amp; Guesthouse</span>
+      <span className="brand-subtitle">Guesthouse</span>
     </Link>
   );
 }
@@ -94,7 +95,11 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           ].map(([name, url]) => (
             <Link
               key={url}
-              className={(url === "/" ? path === "/" : path.startsWith(url)) ? "active" : ""}
+              className={
+                (url === "/" ? path === "/" : path.startsWith(url))
+                  ? "active"
+                  : ""
+              }
               href={url}
               onClick={() => setOpen(false)}
             >
@@ -160,7 +165,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <div>
             <span className="eyebrow">LET’S CONNECT</span>
             <a href="tel:+914132622224">+91 413 262 22 24</a>
+            <a href="tel:+917871562343">+91 78715 62343</a>
             <a href="mailto:avapart@gmail.com">avapart@gmail.com</a>
+            <a href="mailto:avparts@auroville.org.in">avparts@auroville.org.in</a>
             <a
               href="https://wa.me/917871562343"
               target="_blank"
@@ -194,8 +201,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <Link href="/contact">
             Privacy & booking enquiries <ArrowRight size={13} />
           </Link>
+          <Link href="/cancellation-policy">
+            Reservations &amp; Cancellation Policy
+          </Link>
         </div>
       </footer>
+      {!path.startsWith("/admin") && (
+        <WhatsAppButton raised={path.startsWith("/book")} />
+      )}
     </>
   );
 }

@@ -26,14 +26,14 @@ test("suggestions use sufficient live rooms, sum distinct prices and preserve st
       if (args.p_category === "twin") {
         assert.equal(args.p_guests, 2);
         rows = [
-          { id: "a", nightly_rate: 200000 },
-          { id: "b", nightly_rate: 250000 },
+          { id: "a", total_amount: 400000 },
+          { id: "b", total_amount: 500000 },
         ];
       }
       if (args.p_category === "studio")
-        rows = [{ id: "one", nightly_rate: 150000 }];
+        rows = [{ id: "one", total_amount: 300000 }];
       if (args.p_category === "family" && args.p_checkin === "2090-10-11")
-        rows = [{ id: "family", nightly_rate: 400000 }];
+        rows = [{ id: "family", total_amount: 800000 }];
       return new Response(JSON.stringify(rows), {
         headers: { "Content-Type": "application/json" },
       });
@@ -59,14 +59,14 @@ test("suggestions use sufficient live rooms, sum distinct prices and preserve st
       quantity: 2,
       checkin: "2090-10-10",
       checkout: "2090-10-12",
-      nightly_rate: 450000,
+      total_amount: 900000,
     },
     {
       room: "family",
       quantity: 1,
       checkin: "2090-10-11",
       checkout: "2090-10-13",
-      nightly_rate: 400000,
+      total_amount: 800000,
     },
   ]);
   fail = true;

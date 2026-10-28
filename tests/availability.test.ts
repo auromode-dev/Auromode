@@ -40,7 +40,7 @@ test("availability uses inventory independently of payment/email configuration",
     {
       id: "test-room",
       name: "Standard 1",
-      nightly_rate: 250000,
+      total_amount: 500000,
       cancellation_terms: "Test terms",
     },
   ];
@@ -52,7 +52,7 @@ test("availability uses inventory independently of payment/email configuration",
     "fetch",
     async (input: RequestInfo | URL, init?: RequestInit) => {
       calls++;
-      assert.ok(String(input).endsWith("/rest/v1/rpc/available_rooms"));
+      assert.ok(String(input).endsWith("/rest/v1/rpc/available_rooms_priced"));
       assert.deepEqual(JSON.parse(String(init?.body)), {
         p_category: "twin",
         p_checkin: "2090-10-10",
@@ -93,6 +93,15 @@ test("availability uses inventory independently of payment/email configuration",
     const body = await r.json();
     assert.ok(body.error);
     assert.equal(body.rooms, undefined);
+  });
+  await t.test("missing seasonal migration fails instead of quoting normal-only rates", async () => {
+    status = 404;
+    result = { message: "Function missing", code: "PGRST202" };
+    const response = await POST(request());
+    assert.equal(response.status, 503);
+    const body = await response.json();
+    assert.equal(body.rooms, undefined);
+    assert.match(body.error, /migration/i);
   });
   await t.test("invalid dates never query inventory", async () => {
     const before = calls;

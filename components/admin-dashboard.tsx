@@ -6,6 +6,8 @@ import {
   type ManagedRoom as Room,
 } from "@/components/room-manager";
 import { ensureAdminSession } from "@/lib/admin-session";
+import { ReceptionBooking } from "@/components/reception-booking";
+import { guestHistory } from "@/lib/guest-history";
 type Booking = {
   id: string;
   first_name: string;
@@ -176,11 +178,9 @@ export function AdminDashboard() {
     (b) => b.status === "confirmed" && b.checkin <= today && b.checkout > today,
   ).length;
   const active = rooms.filter((r) => r.active).length;
-  const guests = Array.from(
-    new Map(bookings.map((b) => [b.email, b])).values(),
-  );
+  const guests = guestHistory(bookings);
   return (
-    <div className="admin-wrap">
+    <div className="admin-wrap" translate="no" data-private>
       <div className="admin-toolbar">
         <div>
           <span className="eyebrow">AUROMODE RECEPTION · LIVE DATA</span>
@@ -229,18 +229,20 @@ export function AdminDashboard() {
         </div>
       </div>
       <div className="admin-tabs">
-        {["Bookings", "Rooms", "Guests", "Enquiries"].map((t) => (
-          <button
-            className={tab === t ? "selected" : ""}
-            key={t}
-            onClick={() => {
-              setTab(t);
-              setMessage("");
-            }}
-          >
-            {t}
-          </button>
-        ))}
+        {["Bookings", "Direct booking", "Rooms", "Guests", "Enquiries"].map(
+          (t) => (
+            <button
+              className={tab === t ? "selected" : ""}
+              key={t}
+              onClick={() => {
+                setTab(t);
+                setMessage("");
+              }}
+            >
+              {t}
+            </button>
+          ),
+        )}
       </div>
       {message && (
         <p className="notice" role="status">
@@ -358,6 +360,9 @@ export function AdminDashboard() {
       {tab === "Rooms" && (
         <RoomManager rooms={rooms} db={db} refresh={refresh} />
       )}
+      {tab === "Direct booking" && (
+        <ReceptionBooking db={db} refresh={refresh} />
+      )}
       {tab === "Guests" && (
         <div className="table-wrap">
           <table>
@@ -370,8 +375,8 @@ export function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              {guests.map((g) => (
-                <tr key={g.email}>
+              {guests.map(({ key, guest: g, bookings: history }) => (
+                <tr key={key}>
                   <td>
                     {g.first_name} {g.last_name}
                   </td>
@@ -379,17 +384,12 @@ export function AdminDashboard() {
                   <td>{g.phone}</td>
                   <td>
                     <details>
-                      <summary>
-                        {bookings.filter((b) => b.email === g.email).length}{" "}
-                        booking(s)
-                      </summary>
-                      {bookings
-                        .filter((b) => b.email === g.email)
-                        .map((b) => (
-                          <div key={b.id}>
-                            {b.checkin} — {b.checkout} · {b.status}
-                          </div>
-                        ))}
+                      <summary>{history.length} booking(s)</summary>
+                      {history.map((b) => (
+                        <div key={b.id}>
+                          {b.checkin} — {b.checkout} · {b.status}
+                        </div>
+                      ))}
                     </details>
                   </td>
                 </tr>

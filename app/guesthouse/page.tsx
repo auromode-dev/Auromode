@@ -18,9 +18,9 @@ export default async function Guesthouse() {
     ? (
         await db
           .from("rooms")
-          .select("category,nightly_rate")
+          .select("category,season_rate,non_season_rate")
           .eq("active", true)
-          .order("nightly_rate")
+          .order("non_season_rate")
       ).data
     : null;
   return (
@@ -49,6 +49,10 @@ export default async function Guesthouse() {
             There’s a place for you here.
           </p>
         </div>
+        <p className="season-rate-note">
+          January–March: season rates. April–December: normal rates. Each night
+          is priced by its date.
+        </p>
         <div className="room-grid">
           {roomTypes.map((room) => (
             <article className="room-card" key={room.id}>
@@ -59,7 +63,8 @@ export default async function Guesthouse() {
               <div className="room-body">
                 <div className="room-meta">
                   <span>
-                    <Users size={14} /> {`${room.beds} ${room.beds === 1 ? "bed" : "beds"}`}
+                    <Users size={14} />{" "}
+                    {`${room.beds} ${room.beds === 1 ? "bed" : "beds"}`}
                   </span>
                   <span>
                     <Wifi size={14} /> WiFi
@@ -68,16 +73,33 @@ export default async function Guesthouse() {
                 <h3>{room.name}</h3>
                 <p>{room.description}</p>
                 <div className="room-bottom">
-                  <span>
-                    {inventory?.some((r) => r.category === room.id)
-                      ? "From ₹" +
-                        (
-                          inventory.find((r) => r.category === room.id)!
-                            .nightly_rate / 100
-                        ).toLocaleString("en-IN") +
-                        " / night"
-                      : "Contact us for current rates"}
-                  </span>
+                  <div className="room-season-rates">
+                    {inventory?.some((r) => r.category === room.id) ? (
+                      (
+                        [
+                          ["January–March", "season_rate"],
+                          ["April–December", "non_season_rate"],
+                        ] as const
+                      ).map(([label, rate]) => (
+                        <div key={rate}>
+                          <span>{label}</span>
+                          <strong>
+                            {"From ₹" +
+                              (
+                                Math.min(
+                                  ...inventory
+                                    .filter((r) => r.category === room.id)
+                                    .map((r) => r[rate]),
+                                ) / 100
+                              ).toLocaleString("en-IN") +
+                              " / night"}
+                          </strong>
+                        </div>
+                      ))
+                    ) : (
+                      <span>Contact us for current rates</span>
+                    )}
+                  </div>
                   <Link className="text-link" href={"/book?room=" + room.id}>
                     Explore your stay <ArrowUpRight size={16} />
                   </Link>

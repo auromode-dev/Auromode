@@ -755,7 +755,7 @@ footer {
   line-height: 2.1;
 }
 .footer-top a:not(.brand) {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 2.1;
 }
 .footer-top a:not(.brand) {
@@ -764,11 +764,11 @@ footer {
   gap: 8px;
 }
 .footer-top .eyebrow {
-  font-size: 8px;
+  font-size: 12px;
   margin-bottom: 17px;
 }
 .footer-note {
-  font-size: 9px;
+  font-size: 12px;
   color: var(--muted);
   margin-top: 12px;
 }
@@ -778,7 +778,7 @@ footer {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  font-size: 8px;
+  font-size: 12px;
   color: var(--muted);
 }
 .footer-bottom a {
@@ -1090,10 +1090,40 @@ footer {
   margin-bottom: 15px;
 }
 .admin-wrap {
+  font-size: 16px;
   max-width: 1200px;
   margin: auto;
   padding: 45px 30px 80px;
 }
+/* Reception typography and modal room editor. */
+.admin-wrap table,.admin-wrap .field,.admin-wrap input,.admin-wrap select,.admin-wrap textarea,.admin-wrap .admin-tabs button,.admin-wrap .inline-link {font-size:16px}
+.admin-wrap th,.admin-wrap .stat span,.admin-wrap small,.admin-wrap .eyebrow {font-size:14px}
+.admin-wrap .stat strong {font-family:Manrope,sans-serif;font-size:36px;font-weight:700}
+.admin-wrap .stat span {display:block;line-height:1.5}
+.room-edit-panel {position:fixed;inset:0 0 0 auto;margin:0;width:min(680px,100vw);max-width:100vw;height:100dvh;max-height:100dvh;border:0;padding:28px;background:var(--ivory);color:var(--ink);overflow-y:auto;box-shadow:-12px 0 40px #0002}
+.room-edit-panel::backdrop {background:#18271e80}
+.season-rate-note {margin-bottom:28px}
+.policy-content {max-width:900px;margin:0 auto;padding:0 30px 80px}
+.policy-content section {margin-bottom:36px}
+.policy-content h2 {font-size:28px;letter-spacing:-.5px;margin-bottom:16px}
+.policy-content p,.policy-content li {font-size:16px;line-height:1.8;margin-bottom:16px}
+.policy-content ul {list-style:disc;padding-left:24px}
+.policy-content a:not(.button) {text-decoration:underline;overflow-wrap:anywhere}
+.policy-content .button {margin:0 0 16px;white-space:normal}
+.contact-fields {border:0;margin:0;padding:0;min-width:0}
+.contact-card + .contact-card {margin-top:24px}
+.contact-card .text-link {display:flex;margin-top:16px}
+#contact-form {scroll-margin-top:140px;min-width:0}
+.room-season-rates {display:grid;gap:12px}
+.room-season-rates div {display:grid;gap:2px}
+.room-season-rates span {font-size:14px}
+.room-season-rates strong {font-size:16px}
+.room-edit-heading {display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}
+.room-edit-heading h2 {font-size:32px}
+.room-edit-panel fieldset {border:0;padding:0;margin:0;min-width:0}
+.room-edit-panel .notice {overflow-wrap:anywhere}
+.room-edit-panel form > fieldset > .button {margin:8px 8px 0 0}
+@media(max-width:560px) {.room-edit-panel {padding:20px}.room-edit-panel .field-grid {grid-template-columns:1fr}.admin-wrap .stat strong {font-size:30px}}
 .admin-toolbar {
   display: flex;
   align-items: center;
@@ -1867,7 +1897,8 @@ td select {
 .booking-room-gallery .room-gallery, .about-photo-gallery .room-gallery { border-radius: 22px; overflow: hidden; }
 .booking-room-gallery .room-gallery > img, .about-photo-gallery .room-gallery > img { height: auto; aspect-ratio: 3 / 2; object-fit: contain; }
 .booking-room-gallery .gallery-thumbnails, .about-photo-gallery .gallery-thumbnails { padding: 16px; gap: 12px; }
-.about-photo-gallery .gallery-thumbnails { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.about-photo-gallery .gallery-thumbnails { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.about-photo-gallery .room-gallery > img[src="/about/map.JPG"] { object-fit: contain; }
 @media (max-width: 600px) { .about-photo-gallery .gallery-thumbnails { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .booking-room-gallery { padding: 0 20px 60px; } }
 .admin-image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin:20px 0}.admin-image-grid img{width:100%;height:110px;object-fit:cover}.admin-image-grid button{display:block;margin:5px 0;font-size:16px;text-decoration:underline;cursor:pointer}
@@ -2082,6 +2113,15 @@ h2 {font-size:clamp(30px,3.2vw,46px);letter-spacing:-1.6px;line-height:1.2}
 .notice.availability-unavailable p {color:inherit;font-weight:600}
 .brand-subtitle{display:block;font-size:9px;font-weight:500;line-height:1.3;letter-spacing:.15px;color:var(--earth);margin-top:2px;white-space:nowrap}
 @media(max-width:560px){.brand-subtitle{font-size:7px;letter-spacing:0}.header .brand-logo{width:85px}}
+.header .brand-subtitle {font-size:16px;white-space:normal;text-align:center;max-width:220px}
+@media(max-width:1150px) {
+ .header .brand-subtitle {max-width:140px}
+ .header {height:112px}
+ .main-nav {display:none;position:absolute;top:112px;left:0;right:0;margin:0;padding:18px;background:var(--ivory);border-radius:0 0 20px 20px;box-shadow:0 15px 20px #0001}
+ .main-nav.open {display:flex;flex-direction:column;gap:8px}
+ .main-nav > a {font-size:16px;padding:12px 18px}
+ .menu-button {display:block}
+}
 
 /* Requested bold heading treatment, including emphasized heading words. */
 h1,h2,h3,h4,h5,h6,h1 em,h2 em,h3 em,h4 em,h5 em,h6 em {font-weight:700 !important}
@@ -2096,4 +2136,33 @@ html:not([lang="en"]) :is(h1, h2, h3) {
     min-height: 555px;
     max-height: none;
   }
+}
+
+/* Entry loader: plays once on a full page load and fades out by itself. */
+.site-loader{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:var(--ivory);pointer-events:none;animation:site-loader-out .6s ease 2s forwards}
+.site-loader-inner{display:flex;flex-direction:column;align-items:center;gap:14px}
+.site-loader-logo{width:min(200px,52vw);height:auto;opacity:0;animation:site-loader-logo .8s cubic-bezier(.2,.7,.2,1) .1s forwards}
+.site-loader-line{display:block;width:120px;height:2px;border-radius:2px;background:var(--earth);transform:scaleX(0);animation:site-loader-line .7s ease .35s forwards}
+.site-loader-text{display:flex;font-size:18px;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:var(--green);margin-right:-.35em}
+.site-loader-text span{opacity:0;transform:translateY(10px);animation:site-loader-letter .5s ease forwards}
+@keyframes site-loader-logo{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes site-loader-line{to{transform:scaleX(1)}}
+@keyframes site-loader-letter{to{opacity:1;transform:none}}
+@keyframes site-loader-out{to{opacity:0;visibility:hidden}}
+@media (prefers-reduced-motion: reduce){
+  .site-loader{animation-delay:.4s!important}
+  .site-loader-logo,.site-loader-line,.site-loader-text span{animation-delay:0s!important}
+}
+
+/* Floating WhatsApp chat button; raised above the food menu trigger on /book. */
+.whatsapp-float{position:fixed;right:max(24px,env(safe-area-inset-right));bottom:calc(24px + env(safe-area-inset-bottom));z-index:95;display:flex;align-items:center;gap:10px;height:60px;min-width:60px;padding:0 16px;border-radius:999px;background:#25d366;color:#fff;font-weight:700;font-size:16px;text-decoration:none;box-shadow:0 6px 22px #0003;transition:translate .2s ease,box-shadow .2s ease;animation:whatsapp-in .5s ease 2.4s both}
+.whatsapp-float.raised{bottom:calc(120px + env(safe-area-inset-bottom))}
+.whatsapp-float:hover{translate:0 -3px;box-shadow:0 10px 28px #0004}
+.whatsapp-float:focus-visible{outline:3px solid #9a763f;outline-offset:3px}
+.whatsapp-float-label{white-space:nowrap}
+@keyframes whatsapp-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (max-width:700px){
+  .whatsapp-float{right:max(16px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));width:56px;height:56px;min-width:0;padding:0;justify-content:center}
+  .whatsapp-float.raised{bottom:calc(112px + env(safe-area-inset-bottom))}
+  .whatsapp-float-label{display:none}
 }

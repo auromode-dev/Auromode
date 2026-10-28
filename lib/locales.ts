@@ -16,7 +16,7 @@
       "Séjourner, travailler, partager un repas et se rencontrer. Découvrez le rythme d’Auromode.",
     storyTitle: "Venez pour un séjour. Trouvez votre place.",
     story:
-      "Créé en 1975 comme atelier de confection, Auromode est devenu une maison d’hôtes en 2014. Aujourd’hui, hébergement, coworking, restauration et rencontres se retrouvent sur un même campus au cœur d’Auroville.",
+      "Créé en 2000 comme atelier de confection, Auromode est devenu une maison d’hôtes en 2014. Aujourd’hui, hébergement, coworking, restauration et rencontres se retrouvent sur un même campus au cœur d’Auroville.",
     stayTitle: "Un espace pour se reposer.",
     stayText:
       "Studio Suite (1 lit), Twin Room (2 lits), Triple Room (3 lits) et Family Suite (4 lits). Consultez les disponibilités et les tarifs en ligne selon vos dates.",
@@ -58,7 +58,7 @@
       "தங்குங்கள், பணியாற்றுங்கள், உணவைப் பகிருங்கள், புதிய உறவுகளை உருவாக்குங்கள். ஆரோமோடின் அமைதியான வாழ்க்கையை அனுபவியுங்கள்.",
     storyTitle: "தங்க வாருங்கள். உங்களுக்கான இடத்தைக் கண்டறியுங்கள்.",
     story:
-      "1975-இல் ஆடைத் தொழிற்சாலையாகத் தொடங்கிய ஆரோமோடு, 2014-இல் விருந்தினர் இல்லமாக மாறியது. இன்று தங்குமிடம், பணியிடம், உணவகம் மற்றும் சமூகச் சந்திப்புகள் ஒரே வளாகத்தில் இணைகின்றன.",
+      "2000-இல் ஆடைத் தொழிற்சாலையாகத் தொடங்கிய ஆரோமோடு, 2014-இல் விருந்தினர் இல்லமாக மாறியது. இன்று தங்குமிடம், பணியிடம், உணவகம் மற்றும் சமூகச் சந்திப்புகள் ஒரே வளாகத்தில் இணைகின்றன.",
     stayTitle: "ஓய்வெடுக்க உங்களுக்கான ஓர் இடம்.",
     stayText:
       "ஸ்டுடியோ சூட் (1 படுக்கை), ட்வின் அறை (2 படுக்கைகள்), டிரிபிள் அறை (3 படுக்கைகள்), குடும்ப சூட் (4 படுக்கைகள்). உங்கள் தேதிகளுக்கான அறைகள் மற்றும் கட்டணங்களை இணையத்தில் பார்க்கலாம்.",

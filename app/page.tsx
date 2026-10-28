@@ -115,7 +115,7 @@ export default function Home() {
           </Link>
           <div className="intro-signoff">
             <Leaf size={18} />
-            <span>Rooted in community. Growing since 1975.</span>
+            <span>Rooted in community. Growing since 2000.</span>
           </div>
         </Reveal>
         <Reveal className="intro-images">
@@ -127,7 +127,7 @@ export default function Home() {
           />
           <div className="story-stamp">
             <span>EST.</span>
-            <strong>1975</strong>
+            <strong>2000</strong>
             <span>GROWING TOGETHER</span>
           </div>
           <div className="intro-caption">

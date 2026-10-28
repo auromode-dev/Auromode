@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { roomTypes } from "@/lib/content";
 import { ensureAdminSession } from "@/lib/admin-session";
-import { guestSchema, staySchema, nights } from "@/lib/validation";
+import { guestSchema, staySchema } from "@/lib/validation";
 
 export function ReceptionBooking({
   db,
@@ -75,12 +75,10 @@ export function ReceptionBooking({
       }
       const selected = data.slice(0, stay.quantity) as {
         name: string;
-        nightly_rate: number;
+        total_amount: number;
       }[];
       setQuote({
-        amount:
-          selected.reduce((sum, r) => sum + r.nightly_rate, 0) *
-          nights(stay.checkin, stay.checkout),
+        amount: selected.reduce((sum, r) => sum + r.total_amount, 0),
         names: selected.map((r) => r.name),
       });
     } catch (e) {
@@ -198,6 +196,27 @@ export function ReceptionBooking({
       </p>
       <fieldset disabled={busy}>
         <div className="field-grid">
+          {(
+            [
+              ["firstName", "First name", "text"],
+              ["lastName", "Last name", "text"],
+              ["email", "Email", "email"],
+              ["phone", "Phone", "tel"],
+            ] as const
+          ).map(([name, label, type]) => (
+            <label className="field" key={name}>
+              {label}
+              <input
+                name={name}
+                type={type}
+                required
+                maxLength={name === "email" ? 254 : name === "phone" ? 30 : 80}
+              />
+            </label>
+          ))}
+        </div>
+
+        <div className="field-grid">
           <label className="field">
             Check-in
             <input
@@ -270,28 +289,6 @@ export function ReceptionBooking({
                 {quote.names.join(", ")}. Rooms are assigned again when saved,
                 at the checked total.
               </p>
-            </div>
-            <div className="field-grid">
-              {(
-                [
-                  ["firstName", "First name", "text"],
-                  ["lastName", "Last name", "text"],
-                  ["email", "Email", "email"],
-                  ["phone", "Phone", "tel"],
-                ] as const
-              ).map(([name, label, type]) => (
-                <label className="field" key={name}>
-                  {label}
-                  <input
-                    name={name}
-                    type={type}
-                    required
-                    maxLength={
-                      name === "email" ? 254 : name === "phone" ? 30 : 80
-                    }
-                  />
-                </label>
-              ))}
             </div>
             <label className="field">
               Guest requests / reception notes

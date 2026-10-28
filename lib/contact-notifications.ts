@@ -13,7 +13,7 @@ export async function processContactEmails(id?: string) {
    if(enquiry[column])continue;
    try {
     const text=recipient==="guest"
-     ? `Hello ${enquiry.name},\n\nThank you for contacting Auromode. We have received your enquiry about ${enquiry.subject}. Reception will be in touch.\n\nThis acknowledgement does not reserve a room or confirm a booking.\n\nFor assistance: avapart@gmail.com or +91 413 262 22 24.\nAuromode Guesthouse`
+     ? `Hello ${enquiry.name},\n\nThank you for contacting Auromode. We have received your enquiry about ${enquiry.subject}. Reception will be in touch.\n\nThis acknowledgement does not reserve a room or confirm a booking, cancellation or refund.\n\nFor assistance: avapart@gmail.com, avparts@auroville.org.in, +91 413 262 22 24 or +91 78715 62343.\nAuromode Guesthouse`
      : `New enquiry received\n\nName: ${enquiry.name}\nEmail: ${enquiry.email}\nPhone: ${enquiry.phone || "Not provided"}\nSubject: ${enquiry.subject}\n\n${enquiry.message}`;
     await email(recipient==="guest"?enquiry.email:process.env.ADMIN_NOTIFICATION_EMAIL!,recipient==="guest"?"Auromode - enquiry received":"Auromode - new enquiry",text,enquiry.id+"-contact-"+recipient);
     const saved=await db.from("enquiries").update({[column]:true}).eq("id",enquiry.id);if(saved.error)throw saved.error;accepted++;

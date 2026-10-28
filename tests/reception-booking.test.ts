@@ -77,8 +77,18 @@ test("reception bookings enforce admin access, atomic blocks and idempotent retr
       payment_status: string;
       booking_source: string;
       amount: number;
+      first_name: string;
+      last_name: string;
+      phone: string;
+      email: string;
     }>("select * from bookings");
     assert.equal(rows.rows.length, 2);
+    for (const row of rows.rows) {
+      assert.equal(row.first_name, "Test");
+      assert.equal(row.last_name, "Guest");
+      assert.equal(row.phone, "123456789");
+      assert.equal(row.email, "test@example.com");
+    }
     assert.ok(
       rows.rows.every(
         (r) =>

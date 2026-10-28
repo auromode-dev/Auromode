@@ -18,13 +18,13 @@ async function main() {
                   {
                     id: "1",
                     name: "Twin A",
-                    nightly_rate: 200000,
+                    total_amount: 400000,
                     cancellation_terms: "Test terms",
                   },
                   {
                     id: "2",
                     name: "Twin B",
-                    nightly_rate: 250000,
+                    total_amount: 500000,
                     cancellation_terms: "Test terms",
                   },
                 ]
@@ -41,21 +41,22 @@ async function main() {
               quantity: 2,
               checkin: "2090-10-10",
               checkout: "2090-10-12",
-              nightly_rate: 450000,
+              total_amount: 900000,
             },
             {
               room: "family",
               quantity: 1,
               checkin: "2090-10-11",
               checkout: "2090-10-13",
-              nightly_rate: 400000,
+              total_amount: 800000,
             },
           ],
         },
       }),
     );
     await page.goto(
-      "http://localhost:3000/availability?adults=4&checkin=2090-10-10&checkout=2090-10-12",
+      (process.env.TEST_BASE_URL || "http://localhost:3000") +
+        "/availability?adults=4&checkin=2090-10-10&checkout=2090-10-12",
     );
     await page.getByRole("heading", { name: "Other ways to stay." }).waitFor();
     assert.equal(

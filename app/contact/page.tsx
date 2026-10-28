@@ -1,5 +1,6 @@
 ﻿import { Suspense } from "react";
 import { ContactForm } from "@/components/contact-form";
+import Link from "next/link";
 export const metadata = {
   title: "Contact & Directions",
   alternates: { canonical: "/contact" },
@@ -30,7 +31,11 @@ export default function Contact() {
             <p>
               <a href="tel:+914132622224">+91 413 262 22 24</a>
               <br />
+              <a href="tel:+917871562343">+91 78715 62343</a>
+              <br />
               <a href="mailto:avapart@gmail.com">avapart@gmail.com</a>
+              <br />
+              <a href="mailto:avparts@auroville.org.in">avparts@auroville.org.in</a>
             </p>
             <a className="text-link" href="https://wa.me/917871562343">
               Chat on WhatsApp ↗
@@ -40,6 +45,23 @@ export default function Contact() {
               <br />
               9:30 AM–5:00 PM
             </p>
+          </div>
+          <div className="contact-card">
+            <h3>Requesting a cancellation</h3>
+            <p>
+              Submitting a request does not automatically cancel your booking or
+              issue a refund. Reception will confirm the cancellation and any
+              applicable charges or refund by email.
+            </p>
+            <Link
+              className="text-link"
+              href="/contact?type=cancellation#contact-form"
+            >
+              Request cancellation
+            </Link>
+            <Link className="text-link" href="/cancellation-policy">
+              Reservations &amp; Cancellation Policy
+            </Link>
           </div>
           <iframe
             className="contact-map"

@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       },
       { status: 503 },
     );
-  const { data, error } = await db.rpc("available_rooms", {
+  const { data, error } = await db.rpc("available_rooms_priced", {
     p_category: parsed.data.room,
     p_checkin: parsed.data.checkin,
     p_checkout: parsed.data.checkout,

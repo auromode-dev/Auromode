@@ -63,7 +63,7 @@ export async function POST(request: Request) {
   try {
     const results = await Promise.all(
       candidates.map(async (c) => {
-        const { data, error } = await db.rpc("available_rooms", {
+        const { data, error } = await db.rpc("available_rooms_priced", {
           p_category: c.room,
           p_checkin: c.checkin,
           p_checkout: c.checkout,
@@ -73,11 +73,11 @@ export async function POST(request: Request) {
         if ((data?.length || 0) < c.quantity) return null;
         return {
           ...c,
-          nightly_rate: data
+          total_amount: data
             .slice(0, c.quantity)
             .reduce(
-              (sum: number, r: { nightly_rate: number }) =>
-                sum + r.nightly_rate,
+              (sum: number, r: { total_amount: number }) =>
+                sum + r.total_amount,
               0,
             ),
         };
